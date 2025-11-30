@@ -1,0 +1,77 @@
+# -------------------------
+# Python / Virtual Env
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+venv/
+.env/
+.venv/
+env/
+ENV/
+
+# Byte-compiled / caches
+*.pickle
+*.pkl
+*.joblib
+*.npy
+*.npz
+
+# Logs
+*.log
+logs/
+wandb/
+tensorboard/
+tb_logs/
+ppo_firewater.zip
+minecraft_data/
+
+# -------------------------
+# Stable-Baselines3
+# -------------------------
+# SB3 saved models
+*.zip
+*.pth
+*.onnx
+
+# Replay buffers
+replay_buffer/
+*.replay/
+
+# Rollout / video
+videos/
+*.mp4
+*.gif
+
+# -------------------------
+# Gymnasium Render Artifacts
+# -------------------------
+frames/
+render/
+screenshots/
+
+# -------------------------
+# IDE / Editor files
+# -------------------------
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+
+# MacOS
+.DS_Store
+*.DS_Store
+
+# -------------------------
+# Misc
+# -------------------------
+*.swp
+*.swo
+*.tmp
+tmp/
