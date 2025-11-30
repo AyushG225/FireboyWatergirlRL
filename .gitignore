@@ -26,6 +26,8 @@ ENV/
 logs/
 wandb/
 tensorboard/
+events.out.tfevents.*
+tfevents.*
 tb_logs/
 ppo_firewater.zip
 minecraft_data/
