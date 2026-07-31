@@ -1,36 +1,41 @@
-from time import sleep
+import argparse
+
 from firewater_env import FireWaterEnv
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(description="Watch a random-agent rollout")
+    parser.add_argument("--level", type=int, choices=range(5), default=0)
+    parser.add_argument("--steps", type=int, default=300)
+    return parser.parse_args()
+
+
 def main():
-    env = FireWaterEnv(render_mode="human")
-    obs, info = env.reset()
+    args = parse_args()
+    if args.steps < 1:
+        raise SystemExit("--steps must be at least 1")
+
+    env = FireWaterEnv(render_mode="human", level_id=args.level)
+    obs, _ = env.reset()
     print("initial obs shape:", obs.shape)
-    print("initial obs:", obs)
 
-    for t in range(300):
-        env.render()
+    try:
+        for t in range(args.steps):
+            action = env.action_space.sample()
+            obs, reward, terminated, truncated, info = env.step(action)
+            print(
+                f"t={t:03d} action={action} reward={reward:+.3f} "
+                f"terminated={terminated} truncated={truncated}"
+            )
 
-        action = env.action_space.sample()
+            if env.window_closed:
+                return
 
-        obs, reward, terminated, truncated, info = env.step(action)
-        print(
-            f"t={t:03d}  action={action}  "
-            f"reward={reward:.3f}  term={terminated}  trunc={truncated}"
-        )
-
-        sleep(1 / 30.0)
-
-        if terminated or truncated:
-            print("Episode finished.")
-            break
-
-    env.close()
-
-    import matplotlib.pyplot as plt
-
-    plt.ioff()
-    plt.show()
+            if terminated or truncated:
+                print(f"Episode finished: {info['reason']}")
+                break
+    finally:
+        env.close()
 
 
 if __name__ == "__main__":
