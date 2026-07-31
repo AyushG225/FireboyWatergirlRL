@@ -1,6 +1,6 @@
 import unittest
 
-from procedural_levels import generate_level, held_out_seeds, training_seeds
+from firewater.procedural_levels import generate_level, held_out_seeds, training_seeds
 
 
 class ProceduralLevelTests(unittest.TestCase):

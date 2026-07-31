@@ -16,7 +16,7 @@ with simultaneous controls:
 ![Procedural five-floor temple preview](reports/temple_preview_100123.png)
 
 ```bash
-python watch_temple.py
+python scripts/watch_temple.py
 ```
 
 The temple mode is a separate, backward-compatible environment inspired by
@@ -41,7 +41,7 @@ from both directions: characters land on top and bonk their heads underneath.
 Play the temple yourself:
 
 ```bash
-python watch_temple.py --manual
+python scripts/watch_temple.py --manual
 ```
 
 Fire uses the arrow keys; Water uses `A`, `W`, and `D`. Train a 250-input,
@@ -49,11 +49,11 @@ Fire uses the arrow keys; Water uses `A`, `W`, and `D`. Train a 250-input,
 temple rollouts with:
 
 ```bash
-python train_temple.py
+python scripts/train_temple.py
 ```
 
-Run `python train_temple.py --quick` first to smoke-test the full pipeline.
-See the [temple report](reports/TEMPLE.md) and
+Run `python scripts/train_temple.py --quick` first to smoke-test the full
+pipeline. See the [temple report](reports/TEMPLE.md) and
 [`temple_expert_100.json`](reports/temple_expert_100.json) for the exact
 mechanics and benchmark.
 
@@ -63,13 +63,13 @@ Generate a level from a fresh random seed, plan from its geometry, and watch
 both players beat it:
 
 ```bash
-python watch_unseen.py
+python scripts/watch_unseen.py
 ```
 
 Replay a particular unseen layout:
 
 ```bash
-python watch_unseen.py --seed 100123
+python scripts/watch_unseen.py --seed 100123
 ```
 
 Both commands above work on a fresh clone, because the planner solves the
@@ -78,7 +78,7 @@ you can watch the geometry-only policy with its wrong-pool safety shield
 instead:
 
 ```bash
-python watch_unseen.py \
+python scripts/watch_unseen.py \
   --seed 100123 \
   --model checkpoints/firewater_generalist_best
 ```
@@ -109,18 +109,17 @@ python -m pip install -r requirements.txt
 Stable-Baselines3 checkpoints are deliberately excluded from Git, so a fresh
 clone contains no `.zip` models. Everything that does not need a trained
 policy runs immediately: keyboard play, random and scripted rollouts, the
-planner, the temple expert, `watch_unseen.py`, `watch_temple.py`, and the full
-test suite. Commands below that name a path under `checkpoints/` expect a
-model you trained yourself with `train_ppo.py`, `train_generalist.py`, or
-`train_temple.py`. The JSON files in [`reports/`](reports) record the results
-those checkpoints produced.
+planner, the temple expert, and the full test suite. Commands below that name
+a path under `checkpoints/` expect a model you trained yourself with one of
+the three trainers in `scripts/`. The JSON files in [`reports/`](reports)
+record the results those checkpoints produced.
 
 ## Play and inspect the environment
 
 Play both characters yourself:
 
 ```bash
-python play_human.py --level 0
+python scripts/play_human.py --level 0
 ```
 
 Fire uses the arrow keys. Water uses `A`, `D`, and `W`. Press `N`/`P` to
@@ -129,13 +128,13 @@ change levels, `R` to reset, and `Esc` or `Q` to quit.
 Run a random-policy visual smoke test:
 
 ```bash
-python visual_rollout.py --level 2 --steps 300
+python scripts/visual_rollout.py --level 2 --steps 300
 ```
 
 Watch a trained checkpoint:
 
 ```bash
-python rollout_trained.py --level 4
+python scripts/rollout_trained.py --level 4
 ```
 
 Playback automatically prefers the overnight `firewater_refined_final`
@@ -149,7 +148,7 @@ The evaluator reports success, hazard, timeout, return, and episode length for
 each level. It can compare multiple checkpoints and save machine-readable JSON.
 
 ```bash
-python evaluate_agent.py \
+python scripts/evaluate_agent.py \
   ppo_firewater \
   ppo_firewater_level0_strong \
   ppo_firewater_multi \
@@ -168,7 +167,7 @@ and links the raw deterministic and stochastic evaluation reports.
 Record a keyboard trajectory:
 
 ```bash
-python record_demo.py --level 0 --output demo_level0_run1.npz
+python scripts/record_demo.py --level 0 --output demo_level0_run1.npz
 ```
 
 New recordings use the 56-value enhanced state. The trainer can also replay
@@ -178,7 +177,7 @@ file or included in a `level<N>` filename.
 Generate deterministic successful trajectories for every level:
 
 ```bash
-python scripted_demos.py
+python scripts/scripted_demos.py
 ```
 
 Scripted demonstrations are generated in memory by the trainer by default, so
@@ -192,13 +191,13 @@ First verify the complete behavior-cloning, curriculum, evaluation, and
 checkpoint pipeline with a small smoke run:
 
 ```bash
-python train_ppo.py --quick
+python scripts/train_ppo.py --quick
 ```
 
 Start the full five-level curriculum:
 
 ```bash
-python train_ppo.py
+python scripts/train_ppo.py
 ```
 
 New training uses the enhanced observation by default. It includes goal
@@ -224,7 +223,7 @@ Monitor logs go to `logs/`, and TensorBoard events go to `tb_firewater/`.
 Resume at a phase boundary:
 
 ```bash
-python train_ppo.py \
+python scripts/train_ppo.py \
   --resume checkpoints/firewater_ppo_phase3_level2.zip \
   --start-phase 4
 ```
@@ -234,7 +233,7 @@ Useful controls include `--timesteps-scale`, `--n-envs`, `--n-steps`,
 `--ent-coef`, and `--no-scripted-demos`. By default the curriculum decays
 entropy during each newly introduced challenge, then tapers it through hard-map
 refinement and deterministic all-level consolidation. Run
-`python train_ppo.py --help` for the full interface.
+`python scripts/train_ppo.py --help` for the full interface.
 
 To inspect training:
 
@@ -245,7 +244,7 @@ tensorboard --logdir tb_firewater
 Train the geometry-only policy on a fresh randomized layout after every reset:
 
 ```bash
-python train_generalist.py
+python scripts/train_generalist.py
 ```
 
 Evaluate the planner, raw policy, and safety-shielded policy on disjoint
@@ -253,9 +252,9 @@ levels. The first command needs no checkpoint; the other two evaluate a
 generalist model you trained:
 
 ```bash
-python evaluate_generalist.py --planner --count 1000
-python evaluate_generalist.py checkpoints/firewater_generalist_best --count 1000
-python evaluate_generalist.py checkpoints/firewater_generalist_best \
+python scripts/evaluate_generalist.py --planner --count 1000
+python scripts/evaluate_generalist.py checkpoints/firewater_generalist_best --count 1000
+python scripts/evaluate_generalist.py checkpoints/firewater_generalist_best \
   --count 1000 --safety-shield
 ```
 
@@ -273,26 +272,44 @@ performs small end-to-end fixed and procedural training runs.
 
 ## Project layout
 
-- `firewater_env.py`: environment, physics, rewards, rendering, and recorder
-- `scripted_demos.py`: successful source-controlled expert trajectories
-- `procedural_levels.py`: deterministic full-level generation and seed splits
-- `generalized_planner.py`: geometry-driven weighted-A* expert
-- `safety_shield.py`: level-agnostic wrong-pool prevention
-- `train_generalist.py`: planner cloning plus procedural PPO domain randomization
-- `evaluate_generalist.py`: held-out layout benchmarking
-- `watch_unseen.py`: generate and visibly solve a brand-new level
-- `temple_levels.py`: seeded multi-floor temple topology and puzzle objects
-- `temple_env.py`: joint actions, lifts, gems, switches, gates, and rendering
-- `temple_expert.py`: closed-loop simultaneous temple controller and benchmark
-- `watch_temple.py`: automatic or keyboard-controlled complex temple playback
-- `train_temple.py`: expert cloning plus randomized temple PPO training
-- `train_ppo.py`: validated BC plus configurable/resumable PPO curriculum
-- `evaluation.py`: reusable per-level evaluation metrics
-- `evaluate_agent.py`: checkpoint comparison CLI and JSON reporting
-- `play_human.py`: simultaneous keyboard controls
-- `visual_rollout.py`: random-policy visual smoke test
-- `rollout_trained.py`: trained PPO playback
-- `tests/`: environment, demonstration, training, and evaluation regressions
+`firewater/` is the importable library and `scripts/` holds every runnable
+command. Scripts add the repository root to `sys.path` themselves, so a fresh
+clone runs without an install step.
+
+```
+firewater/          library
+├── firewater_env.py        environment, physics, rewards, rendering, recorder
+├── procedural_levels.py    deterministic level generation and seed splits
+├── temple_env.py           joint actions, lifts, gems, switches, gates
+├── temple_levels.py        seeded multi-floor temple topology
+├── scripted_demos.py       successful source-controlled expert trajectories
+├── generalized_planner.py  geometry-driven weighted-A* expert
+├── temple_expert.py        closed-loop simultaneous temple controller
+├── safety_shield.py        level-agnostic wrong-pool prevention
+├── evaluation.py           reusable per-level evaluation metrics
+├── generalization.py       held-out procedural layout metrics
+├── train_ppo.py            validated BC plus resumable PPO curriculum
+└── rollout_trained.py      trained PPO playback
+
+scripts/            commands
+├── watch_temple.py         automatic or keyboard temple playback
+├── watch_unseen.py         generate and visibly solve a brand-new level
+├── play_human.py           simultaneous keyboard controls
+├── visual_rollout.py       random-policy visual smoke test
+├── rollout_trained.py      trained checkpoint playback
+├── record_demo.py          record a keyboard trajectory
+├── scripted_demos.py       write deterministic demonstrations to disk
+├── generalized_planner.py  plan and verify a route through one layout
+├── temple_expert.py        benchmark the temple expert on held-out seeds
+├── train_ppo.py            five-level curriculum
+├── train_generalist.py     planner cloning plus procedural PPO
+├── train_temple.py         temple expert cloning plus randomized PPO
+├── evaluate_agent.py       checkpoint comparison and JSON reporting
+└── evaluate_generalist.py  held-out layout benchmarking
+
+tests/              environment, demonstration, training, evaluation regressions
+reports/            benchmark results and the raw evaluation JSON
+```
 
 ## License and attribution
 

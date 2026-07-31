@@ -8,8 +8,8 @@ from pathlib import Path
 
 import numpy as np
 
-from firewater_env import FireWaterEnv
-from procedural_levels import held_out_seeds
+from firewater.firewater_env import FireWaterEnv
+from firewater.procedural_levels import held_out_seeds
 
 
 @dataclass(frozen=True)

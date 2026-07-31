@@ -7,7 +7,9 @@ from pathlib import Path
 from stable_baselines3 import PPO
 from stable_baselines3.common.utils import set_random_seed
 
-from evaluation import evaluate_model, format_evaluation
+import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
+
+from firewater.evaluation import evaluate_model, format_evaluation
 
 
 def parse_args():

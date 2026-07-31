@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from evaluation import LevelEvaluation, evaluate_model, format_evaluation
+from firewater.evaluation import LevelEvaluation, evaluate_model, format_evaluation
 
 
 class ConstantPolicy:
@@ -13,7 +13,7 @@ class ConstantPolicy:
 
 
 class EvaluationTests(unittest.TestCase):
-    @patch("evaluation.set_random_seed")
+    @patch("firewater.evaluation.set_random_seed")
     def test_evaluation_seeds_policy_sampling(self, set_seed):
         model = ConstantPolicy(action=0)
 

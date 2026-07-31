@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
-from firewater_env import FireWaterEnv
+from firewater.firewater_env import FireWaterEnv
 
 
 @dataclass(frozen=True)

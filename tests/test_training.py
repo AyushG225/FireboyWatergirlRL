@@ -4,8 +4,8 @@ from pathlib import Path
 
 import numpy as np
 
-from firewater_env import FireWaterEnv
-from train_ppo import CURRICULUM, assign_levels, load_demos
+from firewater.firewater_env import FireWaterEnv
+from firewater.train_ppo import CURRICULUM, assign_levels, load_demos
 
 
 class TrainingUtilityTests(unittest.TestCase):

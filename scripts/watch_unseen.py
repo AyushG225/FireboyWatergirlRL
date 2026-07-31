@@ -6,9 +6,11 @@ from pathlib import Path
 
 from stable_baselines3 import PPO
 
-from firewater_env import FireWaterEnv
-from generalized_planner import plan_level
-from safety_shield import shield_action
+import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
+
+from firewater.firewater_env import FireWaterEnv
+from firewater.generalized_planner import plan_level
+from firewater.safety_shield import shield_action
 
 
 UNSEEN_SEED_START = 100_000

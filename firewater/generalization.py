@@ -6,10 +6,10 @@ from typing import Iterable
 import numpy as np
 from stable_baselines3.common.utils import set_random_seed
 
-from firewater_env import FireWaterEnv
-from generalized_planner import plan_level
-from procedural_levels import generate_level
-from safety_shield import shield_action
+from firewater.firewater_env import FireWaterEnv
+from firewater.generalized_planner import plan_level
+from firewater.procedural_levels import generate_level
+from firewater.safety_shield import shield_action
 
 
 @dataclass(frozen=True)

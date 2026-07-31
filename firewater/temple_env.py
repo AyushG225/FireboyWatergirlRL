@@ -7,7 +7,7 @@ import gymnasium as gym
 import numpy as np
 from gymnasium import spaces
 
-from temple_levels import (
+from firewater.temple_levels import (
     ButtonSpec,
     GateSpec,
     GemSpec,

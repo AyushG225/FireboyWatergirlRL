@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from scripted_demos import generate_scripted_demo
+from firewater.scripted_demos import generate_scripted_demo
 
 
 class ScriptedDemonstrationTests(unittest.TestCase):

@@ -6,13 +6,15 @@ from pathlib import Path
 
 from stable_baselines3 import PPO
 
-from evaluation import observation_mode_for_model
-from generalization import (
+import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
+
+from firewater.evaluation import observation_mode_for_model
+from firewater.generalization import (
     evaluate_generalist,
     evaluate_planner,
     format_generalization,
 )
-from procedural_levels import held_out_seeds
+from firewater.procedural_levels import held_out_seeds
 
 
 def resolve_checkpoint(path: Path) -> Path:

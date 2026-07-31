@@ -9,9 +9,11 @@ from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv
 
-from temple_env import TempleEnv
-from temple_expert import TempleExpert
-from train_ppo import RolloutLogger, behavior_clone
+import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
+
+from firewater.temple_env import TempleEnv
+from firewater.temple_expert import TempleExpert
+from firewater.train_ppo import RolloutLogger, behavior_clone
 
 
 INFO_KEYWORDS = (

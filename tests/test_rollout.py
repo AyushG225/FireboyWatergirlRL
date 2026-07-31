@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from rollout_trained import checkpoint_exists, preferred_model
+from firewater.rollout_trained import checkpoint_exists, preferred_model
 
 
 class RolloutTests(unittest.TestCase):
@@ -17,8 +17,8 @@ class RolloutTests(unittest.TestCase):
     def test_preferred_model_uses_first_existing_checkpoint(self):
         candidates = (Path("first"), Path("second"))
 
-        with patch("rollout_trained.PREFERRED_MODELS", candidates), patch(
-            "rollout_trained.checkpoint_exists",
+        with patch("firewater.rollout_trained.PREFERRED_MODELS", candidates), patch(
+            "firewater.rollout_trained.checkpoint_exists",
             side_effect=lambda path: path == candidates[1],
         ):
             self.assertEqual(preferred_model(), candidates[1])

@@ -1,6 +1,8 @@
 import argparse
 
-from firewater_env import record_demo
+import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
+
+from firewater.firewater_env import record_demo
 
 
 def parse_args():

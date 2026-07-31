@@ -8,13 +8,13 @@ os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
 import numpy as np
 from gymnasium.utils.env_checker import check_env
 
-from temple_env import (
+from firewater.temple_env import (
     TempleEnv,
     decode_joint_action,
     encode_joint_action,
 )
-from temple_expert import run_temple_expert
-from temple_levels import generate_temple_level
+from firewater.temple_expert import run_temple_expert
+from firewater.temple_levels import generate_temple_level
 
 
 class TempleEnvTests(unittest.TestCase):

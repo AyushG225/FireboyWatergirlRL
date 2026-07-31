@@ -19,9 +19,9 @@ from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv
 
-from evaluation import evaluate_model, format_evaluation
-from firewater_env import FireWaterEnv
-from scripted_demos import generate_scripted_demo
+from firewater.evaluation import evaluate_model, format_evaluation
+from firewater.firewater_env import FireWaterEnv
+from firewater.scripted_demos import generate_scripted_demo
 
 
 INFO_KEYWORDS = ("success", "dead", "timeout", "reason")

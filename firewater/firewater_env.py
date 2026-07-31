@@ -6,7 +6,7 @@ import numpy as np
 import gymnasium as gym
 from gymnasium import spaces
 
-from procedural_levels import generate_level
+from firewater.procedural_levels import generate_level
 
 # Pygame is only needed for human rendering
 try:

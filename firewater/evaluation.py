@@ -6,7 +6,7 @@ from typing import Iterable
 import numpy as np
 from stable_baselines3.common.utils import set_random_seed
 
-from firewater_env import FireWaterEnv
+from firewater.firewater_env import FireWaterEnv
 
 
 @dataclass(frozen=True)

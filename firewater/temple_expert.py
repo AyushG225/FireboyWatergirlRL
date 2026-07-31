@@ -5,7 +5,7 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from temple_env import TempleEnv, encode_joint_action
+from firewater.temple_env import TempleEnv, encode_joint_action
 
 
 @dataclass(frozen=True)

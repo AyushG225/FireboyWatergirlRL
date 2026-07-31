@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from firewater_env import FireWaterEnv
+from firewater.firewater_env import FireWaterEnv
 
 
 def shield_action(

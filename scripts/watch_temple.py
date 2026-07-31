@@ -4,8 +4,10 @@ import argparse
 import secrets
 from pathlib import Path
 
-from temple_env import TempleEnv, encode_joint_action
-from temple_expert import TempleExpert
+import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
+
+from firewater.temple_env import TempleEnv, encode_joint_action
+from firewater.temple_expert import TempleExpert
 
 
 UNSEEN_SEED_START = 100_000

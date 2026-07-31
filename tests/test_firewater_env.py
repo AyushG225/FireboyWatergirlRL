@@ -8,7 +8,7 @@ os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
 import numpy as np
 from gymnasium.utils.env_checker import check_env
 
-from firewater_env import FireWaterEnv
+from firewater.firewater_env import FireWaterEnv
 
 
 class FireWaterEnvTests(unittest.TestCase):

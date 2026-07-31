@@ -1,7 +1,7 @@
 import unittest
 
-from firewater_env import FireWaterEnv
-from safety_shield import shield_action
+from firewater.firewater_env import FireWaterEnv
+from firewater.safety_shield import shield_action
 
 
 class SafetyShieldTests(unittest.TestCase):

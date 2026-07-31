@@ -1,7 +1,7 @@
 import unittest
 
-from firewater_env import FireWaterEnv
-from generalized_planner import plan_level
+from firewater.firewater_env import FireWaterEnv
+from firewater.generalized_planner import plan_level
 
 
 class GeneralizedPlannerTests(unittest.TestCase):
