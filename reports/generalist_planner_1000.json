@@ -1,0 +1,16 @@
+{
+  "planner": {
+    "layouts": 1000,
+    "successes": 1000,
+    "hazards": 0,
+    "timeouts": 0,
+    "mean_return": 82.44230669398517,
+    "mean_length": 183.096,
+    "per_difficulty_success": {
+      "0": 1.0,
+      "1": 1.0,
+      "2": 1.0
+    },
+    "success_rate": 1.0
+  }
+}

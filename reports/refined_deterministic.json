@@ -1,0 +1,136 @@
+{
+  "checkpoints/firewater_refined_best.zip": {
+    "0": {
+      "level_id": 0,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.21831262919991,
+      "std_return": 1.4210854715202004e-14,
+      "mean_length": 131.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "1": {
+      "level_id": 1,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.57219806739985,
+      "std_return": 2.842170943040401e-14,
+      "mean_length": 156.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "2": {
+      "level_id": 2,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.06284376808715,
+      "std_return": 1.4210854715202004e-14,
+      "mean_length": 146.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "3": {
+      "level_id": 3,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.30004237212059,
+      "std_return": 1.4210854715202004e-14,
+      "mean_length": 166.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "4": {
+      "level_id": 4,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.69047350030091,
+      "std_return": 1.4210854715202004e-14,
+      "mean_length": 159.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    }
+  },
+  "checkpoints/firewater_refined_final.zip": {
+    "0": {
+      "level_id": 0,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.21831262919991,
+      "std_return": 1.4210854715202004e-14,
+      "mean_length": 131.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "1": {
+      "level_id": 1,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.6121980673999,
+      "std_return": 1.4210854715202004e-14,
+      "mean_length": 148.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "2": {
+      "level_id": 2,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 81.89284376808718,
+      "std_return": 1.4210854715202004e-14,
+      "mean_length": 180.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "3": {
+      "level_id": 3,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.4200423721206,
+      "std_return": 0.0,
+      "mean_length": 142.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "4": {
+      "level_id": 4,
+      "episodes": 20,
+      "successes": 20,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.69547350030095,
+      "std_return": 1.4210854715202004e-14,
+      "mean_length": 158.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    }
+  }
+}

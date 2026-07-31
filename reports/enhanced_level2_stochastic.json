@@ -1,0 +1,32 @@
+{
+  "checkpoints/firewater_enhanced_phase3_level2.zip": {
+    "2": {
+      "level_id": 2,
+      "episodes": 50,
+      "successes": 0,
+      "hazards": 45,
+      "timeouts": 5,
+      "mean_return": -0.011010284341611616,
+      "std_return": 3.579398709593047,
+      "mean_length": 272.54,
+      "success_rate": 0.0,
+      "hazard_rate": 0.9,
+      "timeout_rate": 0.1
+    }
+  },
+  "checkpoints/firewater_enhanced_phase4_consolidate.zip": {
+    "2": {
+      "level_id": 2,
+      "episodes": 50,
+      "successes": 0,
+      "hazards": 41,
+      "timeouts": 9,
+      "mean_return": 1.446295390052578,
+      "std_return": 2.8816785882718046,
+      "mean_length": 281.48,
+      "success_rate": 0.0,
+      "hazard_rate": 0.82,
+      "timeout_rate": 0.18
+    }
+  }
+}

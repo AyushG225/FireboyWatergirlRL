@@ -1,0 +1,203 @@
+{
+  "ppo_firewater.zip": {
+    "0": {
+      "level_id": 0,
+      "episodes": 3,
+      "successes": 3,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.1733126291999,
+      "std_return": 0.0,
+      "mean_length": 140.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "1": {
+      "level_id": 1,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 3,
+      "timeouts": 0,
+      "mean_return": -9.154642440267539,
+      "std_return": 0.0,
+      "mean_length": 58.0,
+      "success_rate": 0.0,
+      "hazard_rate": 1.0,
+      "timeout_rate": 0.0
+    },
+    "2": {
+      "level_id": 2,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 0,
+      "timeouts": 3,
+      "mean_return": -6.0497262133341145,
+      "std_return": 0.0,
+      "mean_length": 300.0,
+      "success_rate": 0.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 1.0
+    },
+    "3": {
+      "level_id": 3,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 3,
+      "timeouts": 0,
+      "mean_return": -9.172167327081961,
+      "std_return": 0.0,
+      "mean_length": 58.0,
+      "success_rate": 0.0,
+      "hazard_rate": 1.0,
+      "timeout_rate": 0.0
+    },
+    "4": {
+      "level_id": 4,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 0,
+      "timeouts": 3,
+      "mean_return": -5.951807232178164,
+      "std_return": 0.0,
+      "mean_length": 300.0,
+      "success_rate": 0.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 1.0
+    }
+  },
+  "ppo_firewater_level0_strong.zip": {
+    "0": {
+      "level_id": 0,
+      "episodes": 3,
+      "successes": 3,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.1783126291999,
+      "std_return": 0.0,
+      "mean_length": 139.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "1": {
+      "level_id": 1,
+      "episodes": 3,
+      "successes": 3,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.53719806739988,
+      "std_return": 0.0,
+      "mean_length": 163.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "2": {
+      "level_id": 2,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 3,
+      "timeouts": 0,
+      "mean_return": -9.34700808295096,
+      "std_return": 0.0,
+      "mean_length": 46.0,
+      "success_rate": 0.0,
+      "hazard_rate": 1.0,
+      "timeout_rate": 0.0
+    },
+    "3": {
+      "level_id": 3,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 3,
+      "timeouts": 0,
+      "mean_return": -9.172167327081963,
+      "std_return": 0.0,
+      "mean_length": 58.0,
+      "success_rate": 0.0,
+      "hazard_rate": 1.0,
+      "timeout_rate": 0.0
+    },
+    "4": {
+      "level_id": 4,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 0,
+      "timeouts": 3,
+      "mean_return": -5.951807232178164,
+      "std_return": 0.0,
+      "mean_length": 300.0,
+      "success_rate": 0.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 1.0
+    }
+  },
+  "ppo_firewater_multi.zip": {
+    "0": {
+      "level_id": 0,
+      "episodes": 3,
+      "successes": 3,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.18331262919989,
+      "std_return": 0.0,
+      "mean_length": 138.0,
+      "success_rate": 1.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 0.0
+    },
+    "1": {
+      "level_id": 1,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 3,
+      "timeouts": 0,
+      "mean_return": 1.9121067544824086,
+      "std_return": 0.0,
+      "mean_length": 124.0,
+      "success_rate": 0.0,
+      "hazard_rate": 1.0,
+      "timeout_rate": 0.0
+    },
+    "2": {
+      "level_id": 2,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 0,
+      "timeouts": 3,
+      "mean_return": -2.9958348574012597,
+      "std_return": 0.0,
+      "mean_length": 300.0,
+      "success_rate": 0.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 1.0
+    },
+    "3": {
+      "level_id": 3,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 3,
+      "timeouts": 0,
+      "mean_return": -9.207452539316014,
+      "std_return": 0.0,
+      "mean_length": 54.0,
+      "success_rate": 0.0,
+      "hazard_rate": 1.0,
+      "timeout_rate": 0.0
+    },
+    "4": {
+      "level_id": 4,
+      "episodes": 3,
+      "successes": 0,
+      "hazards": 0,
+      "timeouts": 3,
+      "mean_return": -2.4523241179062323,
+      "std_return": 0.0,
+      "mean_length": 300.0,
+      "success_rate": 0.0,
+      "hazard_rate": 0.0,
+      "timeout_rate": 1.0
+    }
+  }
+}

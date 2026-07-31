@@ -1,0 +1,16 @@
+{
+  "checkpoints/firewater_generalist_v1_750000_steps.zip": {
+    "layouts": 100,
+    "successes": 72,
+    "hazards": 19,
+    "timeouts": 9,
+    "mean_return": 58.06818886693369,
+    "mean_length": 177.43,
+    "per_difficulty_success": {
+      "0": 0.696969696969697,
+      "1": 0.7352941176470589,
+      "2": 0.7272727272727273
+    },
+    "success_rate": 0.72
+  }
+}

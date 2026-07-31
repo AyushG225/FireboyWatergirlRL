@@ -1,0 +1,136 @@
+{
+  "checkpoints/firewater_refined_best.zip": {
+    "0": {
+      "level_id": 0,
+      "episodes": 100,
+      "successes": 97,
+      "hazards": 1,
+      "timeouts": 2,
+      "mean_return": 79.76191282125204,
+      "std_return": 14.052607961349839,
+      "mean_length": 134.51,
+      "success_rate": 0.97,
+      "hazard_rate": 0.01,
+      "timeout_rate": 0.02
+    },
+    "1": {
+      "level_id": 1,
+      "episodes": 100,
+      "successes": 98,
+      "hazards": 1,
+      "timeouts": 1,
+      "mean_return": 80.91713802153672,
+      "std_return": 11.702351256153666,
+      "mean_length": 154.96,
+      "success_rate": 0.98,
+      "hazard_rate": 0.01,
+      "timeout_rate": 0.01
+    },
+    "2": {
+      "level_id": 2,
+      "episodes": 100,
+      "successes": 97,
+      "hazards": 2,
+      "timeouts": 1,
+      "mean_return": 79.45230486180472,
+      "std_return": 14.636698280411467,
+      "mean_length": 154.81,
+      "success_rate": 0.97,
+      "hazard_rate": 0.02,
+      "timeout_rate": 0.01
+    },
+    "3": {
+      "level_id": 3,
+      "episodes": 100,
+      "successes": 87,
+      "hazards": 10,
+      "timeouts": 3,
+      "mean_return": 70.64387436660209,
+      "std_return": 30.024004465556732,
+      "mean_length": 173.82,
+      "success_rate": 0.87,
+      "hazard_rate": 0.1,
+      "timeout_rate": 0.03
+    },
+    "4": {
+      "level_id": 4,
+      "episodes": 100,
+      "successes": 84,
+      "hazards": 6,
+      "timeouts": 10,
+      "mean_return": 69.68558246867924,
+      "std_return": 30.00121738599073,
+      "mean_length": 167.25,
+      "success_rate": 0.84,
+      "hazard_rate": 0.06,
+      "timeout_rate": 0.1
+    }
+  },
+  "checkpoints/firewater_refined_final.zip": {
+    "0": {
+      "level_id": 0,
+      "episodes": 100,
+      "successes": 96,
+      "hazards": 4,
+      "timeouts": 0,
+      "mean_return": 78.40164415494291,
+      "std_return": 18.710283402485135,
+      "mean_length": 129.01,
+      "success_rate": 0.96,
+      "hazard_rate": 0.04,
+      "timeout_rate": 0.0
+    },
+    "1": {
+      "level_id": 1,
+      "episodes": 100,
+      "successes": 98,
+      "hazards": 2,
+      "timeouts": 0,
+      "mean_return": 80.70559953949176,
+      "std_return": 13.39262279941808,
+      "mean_length": 145.87,
+      "success_rate": 0.98,
+      "hazard_rate": 0.02,
+      "timeout_rate": 0.0
+    },
+    "2": {
+      "level_id": 2,
+      "episodes": 100,
+      "successes": 93,
+      "hazards": 7,
+      "timeouts": 0,
+      "mean_return": 75.6715474502659,
+      "std_return": 23.194604934644957,
+      "mean_length": 145.18,
+      "success_rate": 0.93,
+      "hazard_rate": 0.07,
+      "timeout_rate": 0.0
+    },
+    "3": {
+      "level_id": 3,
+      "episodes": 100,
+      "successes": 93,
+      "hazards": 7,
+      "timeouts": 0,
+      "mean_return": 75.98797400509805,
+      "std_return": 23.21861533486907,
+      "mean_length": 149.19,
+      "success_rate": 0.93,
+      "hazard_rate": 0.07,
+      "timeout_rate": 0.0
+    },
+    "4": {
+      "level_id": 4,
+      "episodes": 100,
+      "successes": 94,
+      "hazards": 2,
+      "timeouts": 4,
+      "mean_return": 77.83961488423753,
+      "std_return": 19.357695089318664,
+      "mean_length": 161.81,
+      "success_rate": 0.94,
+      "hazard_rate": 0.02,
+      "timeout_rate": 0.04
+    }
+  }
+}
