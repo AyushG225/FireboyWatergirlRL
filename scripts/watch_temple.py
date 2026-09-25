@@ -24,7 +24,7 @@ def parse_args():
     parser.add_argument(
         "--model",
         type=Path,
-        help="Optional Stable-Baselines3 checkpoint with 250 inputs and 36 actions",
+        help="Optional Stable-Baselines3 temple checkpoint (Discrete(36) actions)",
     )
     parser.add_argument("--stochastic", action="store_true")
     return parser.parse_args()
@@ -57,23 +57,26 @@ def main():
         else UNSEEN_SEED_START + secrets.randbelow(2**31 - UNSEEN_SEED_START)
     )
     model = None
+    observation_mode = "egocentric"
     if args.model is not None:
         from stable_baselines3 import PPO
 
-        model = PPO.load(args.model)
-        if model.observation_space.shape != (TempleEnv.OBSERVATION_SIZE,):
-            raise SystemExit(
-                f"{args.model} has observation shape "
-                f"{model.observation_space.shape}; temple models require "
-                f"({TempleEnv.OBSERVATION_SIZE},)"
-            )
+        model = PPO.load(args.model, device="cpu")
+        try:
+            observation_mode = TempleEnv.mode_for_size(model.observation_space.shape[0])
+        except ValueError as exc:
+            raise SystemExit(f"{args.model}: {exc}") from exc
         if getattr(model.action_space, "n", None) != 36:
             raise SystemExit(
                 f"{args.model} has {getattr(model.action_space, 'n', '?')} "
                 "actions; temple models require 36"
             )
 
-    env = TempleEnv(render_mode="human", level_seed=layout_seed)
+    env = TempleEnv(
+        render_mode="human",
+        level_seed=layout_seed,
+        observation_mode=observation_mode,
+    )
     observation, _ = env.reset(seed=0)
     expert = TempleExpert()
     simultaneous_frames = 0

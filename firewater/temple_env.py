@@ -71,7 +71,17 @@ class TempleEnv(gym.Env):
     MAX_GEMS = 12
     MAX_BUTTONS = 8
     MAX_GATES = 4
-    OBSERVATION_SIZE = 250
+    # "absolute": 250 geometry values. "egocentric": the same 250 followed by
+    # 20 values measured from each character.
+    ABSOLUTE_OBSERVATION_SIZE = 250
+    EGOCENTRIC_FEATURES = 20
+    OBSERVATION_SIZE = ABSOLUTE_OBSERVATION_SIZE + EGOCENTRIC_FEATURES
+    OBSERVATION_SIZES = {
+        "absolute": ABSOLUTE_OBSERVATION_SIZE,
+        "egocentric": OBSERVATION_SIZE,
+    }
+    POOL_SENSOR_RANGE = 200.0
+    FLOOR_SPACING = 125.0
 
     def __init__(
         self,
@@ -79,8 +89,16 @@ class TempleEnv(gym.Env):
         render_mode: str | None = None,
         level_seed: int | None = None,
         seed_range: tuple[int, int] = (0, 100_000),
+        observation_mode: str = "egocentric",
     ):
         super().__init__()
+        if observation_mode not in self.OBSERVATION_SIZES:
+            raise ValueError(
+                f"Unsupported observation_mode {observation_mode!r}; expected "
+                f"one of {sorted(self.OBSERVATION_SIZES)}"
+            )
+        self.observation_mode = observation_mode
+        self.observation_size = self.OBSERVATION_SIZES[observation_mode]
         if render_mode not in (None, *self.metadata["render_modes"]):
             raise ValueError(
                 f"Unsupported render_mode {render_mode!r}; expected None, "
@@ -108,7 +126,7 @@ class TempleEnv(gym.Env):
         self.observation_space = spaces.Box(
             low=-1.0,
             high=1.0,
-            shape=(self.OBSERVATION_SIZE,),
+            shape=(self.observation_size,),
             dtype=np.float32,
         )
 
@@ -580,13 +598,65 @@ class TempleEnv(gym.Env):
             else:
                 values.extend([-1.0] * 5)
 
+        if self.observation_mode == "egocentric":
+            values.extend(self._egocentric_features())
+
         observation = np.asarray(values, dtype=np.float32)
-        if observation.shape != (self.OBSERVATION_SIZE,):
+        if observation.shape != (self.observation_size,):
             raise RuntimeError(
                 f"internal observation size {observation.size}; "
-                f"expected {self.OBSERVATION_SIZE}"
+                f"expected {self.observation_size}"
             )
         return observation
+
+    @classmethod
+    def mode_for_size(cls, size: int) -> str:
+        """Return the observation mode that produces ``size`` values."""
+        for mode, mode_size in cls.OBSERVATION_SIZES.items():
+            if mode_size == size:
+                return mode
+        raise ValueError(
+            f"no temple observation mode has {size} values; "
+            f"expected one of {sorted(cls.OBSERVATION_SIZES.values())}"
+        )
+
+    def _egocentric_features(self) -> list[float]:
+        """Ten values per character, measured from that character.
+
+        - distance to the nearest pool on its walking surface that would kill
+          it, to the right and to the left, as a fraction of 200 px (1.0 means
+          none in range)
+        - for each lift: surface height above the character in floor spacings,
+          and horizontal offset to the lift center as a fraction of the width
+
+        The absolute geometry above already contains this information. Here it
+        is precomputed relative to each character, so a jump decision is one
+        threshold on one input.
+        """
+        features: list[float] = []
+        sensor = self.POOL_SENSOR_RANGE
+        for who in ("fire", "water"):
+            x = getattr(self, f"{who}_x")
+            y = getattr(self, f"{who}_y")
+            right = left = sensor
+            for hazard in self.level.hazards:
+                if hazard.kind == ("lava" if who == "fire" else "water"):
+                    continue
+                x1, y1, x2, _ = hazard.rect
+                if abs(y - y1) > 18.0:
+                    continue
+                if x2 >= x:
+                    right = min(right, max(0.0, x1 - x))
+                if x1 <= x:
+                    left = min(left, max(0.0, x - x2))
+            features.extend([right / sensor, left / sensor])
+            for rect in self.moving_rects:
+                center_x = 0.5 * (rect[0] + rect[2])
+                features.append(
+                    float(np.clip((y - rect[1]) / self.FLOOR_SPACING, -1.0, 1.0))
+                )
+                features.append(float(np.clip((center_x - x) / self.W, -1.0, 1.0)))
+        return features
 
     def _gem_fraction(self, owner: str) -> float:
         indices = [
