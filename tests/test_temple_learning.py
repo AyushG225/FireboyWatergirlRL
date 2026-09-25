@@ -7,10 +7,14 @@ os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
 
 import numpy as np
 from gymnasium.utils.env_checker import check_env
+from stable_baselines3 import PPO
+from stable_baselines3.common.vec_env import DummyVecEnv
 
+from firewater.firewater_env import FireWaterEnv
 from firewater.temple_env import TempleEnv
 from firewater.temple_evaluation import evaluate_temple_expert
 from firewater.temple_expert import TempleExpert
+from firewater.train_ppo import behavior_clone
 
 
 class ObservationModeTests(unittest.TestCase):
@@ -81,6 +85,35 @@ class TempleEvaluationTests(unittest.TestCase):
             self.assertLessEqual(episode.both_command_frames, episode.steps)
         self.assertGreater(result.both_moving_share, 0.0)
         self.assertLess(result.both_moving_share, 1.0)
+
+
+class WeightedCloningTests(unittest.TestCase):
+    def test_sample_weights_shift_the_cloned_policy(self):
+        env = DummyVecEnv([lambda: FireWaterEnv()])
+        observations = np.zeros((200, 19), dtype=np.float32)
+        actions = np.array([0] * 180 + [3] * 20)
+
+        def cloned_action(weights):
+            model = PPO(
+                "MlpPolicy", env, policy_kwargs={"net_arch": [16]}, seed=0, device="cpu"
+            )
+            behavior_clone(
+                model,
+                observations,
+                actions,
+                n_epochs=30,
+                batch_size=50,
+                learning_rate=1e-2,
+                sample_weights=weights,
+            )
+            return int(model.predict(observations[0], deterministic=True)[0])
+
+        self.assertEqual(cloned_action(None), 0)
+        self.assertEqual(cloned_action(np.where(actions == 3, 20.0, 1.0)), 3)
+        with self.assertRaisesRegex(ValueError, "sample_weights"):
+            model = PPO("MlpPolicy", env, seed=0, device="cpu")
+            behavior_clone(model, observations, actions, sample_weights=np.ones(3))
+        env.close()
 
 
 if __name__ == "__main__":

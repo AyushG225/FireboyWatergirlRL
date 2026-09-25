@@ -395,8 +395,14 @@ def behavior_clone(
     batch_size: int = 64,
     learning_rate: float = 1e-3,
     seed: int = 0,
+    sample_weights: np.ndarray | None = None,
 ):
-    """Warm-start an SB3 PPO policy with supervised action prediction."""
+    """Warm-start an SB3 PPO policy with supervised action prediction.
+
+    ``sample_weights`` optionally scales each transition's loss. Rare but
+    decisive actions, such as the single jump frame before a pool, otherwise
+    contribute almost nothing to the average.
+    """
     if demo_obs is None or demo_acts is None:
         print("[BC] No demonstrations provided; skipping BC.")
         return
@@ -407,6 +413,8 @@ def behavior_clone(
         raise ValueError("batch_size must be at least 1")
     if len(demo_obs) != len(demo_acts):
         raise ValueError("demo_obs and demo_acts must have the same length")
+    if sample_weights is not None and len(sample_weights) != len(demo_acts):
+        raise ValueError("sample_weights must match the number of transitions")
     if demo_obs.shape[1:] != model.observation_space.shape:
         raise ValueError(
             f"demo observation shape {demo_obs.shape[1:]} does not match "
@@ -438,7 +446,16 @@ def behavior_clone(
             )
 
             distribution = policy.get_distribution(obs_batch)
-            loss = -distribution.log_prob(acts_batch).mean()
+            log_prob = distribution.log_prob(acts_batch)
+            if sample_weights is None:
+                loss = -log_prob.mean()
+            else:
+                weights = th.as_tensor(
+                    sample_weights[batch_indices],
+                    dtype=th.float32,
+                    device=policy.device,
+                )
+                loss = -(weights * log_prob).sum() / weights.sum()
 
             optimizer.zero_grad()
             loss.backward()
