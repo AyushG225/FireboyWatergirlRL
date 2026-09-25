@@ -1,5 +1,7 @@
 import os
+import sys
 import unittest
+from pathlib import Path
 
 os.environ.setdefault("PYGAME_HIDE_SUPPORT_PROMPT", "1")
 os.environ.setdefault("SDL_AUDIODRIVER", "dummy")
@@ -11,10 +13,13 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import DummyVecEnv
 
 from firewater.firewater_env import FireWaterEnv
-from firewater.temple_env import TempleEnv
+from firewater.temple_env import TempleEnv, encode_joint_action
 from firewater.temple_evaluation import evaluate_temple_expert
 from firewater.temple_expert import TempleExpert
 from firewater.train_ppo import behavior_clone
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import train_temple  # noqa: E402
 
 
 class ObservationModeTests(unittest.TestCase):
@@ -114,6 +119,27 @@ class WeightedCloningTests(unittest.TestCase):
             model = PPO("MlpPolicy", env, seed=0, device="cpu")
             behavior_clone(model, observations, actions, sample_weights=np.ones(3))
         env.close()
+
+
+class TempleTrainerTests(unittest.TestCase):
+    def test_jump_weights_count_each_jumping_character(self):
+        actions = np.array(
+            [
+                encode_joint_action(2, 2),
+                encode_joint_action(5, 2),
+                encode_joint_action(1, 3),
+                encode_joint_action(4, 5),
+            ]
+        )
+        weights = train_temple.jump_weights(actions, jump_weight=10.0)
+        np.testing.assert_allclose(weights, [1.0, 11.0, 11.0, 21.0])
+
+    def test_dagger_beta_decays_from_half_to_zero(self):
+        betas = [train_temple.dagger_beta(i, 12) for i in range(12)]
+        self.assertEqual(betas[0], 0.5)
+        self.assertEqual(betas[-1], 0.0)
+        self.assertEqual(betas[-2], 0.0)
+        self.assertTrue(all(a >= b for a, b in zip(betas, betas[1:], strict=False)))
 
 
 if __name__ == "__main__":
