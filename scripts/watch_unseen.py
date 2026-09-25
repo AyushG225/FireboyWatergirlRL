@@ -22,9 +22,12 @@ def parse_args():
     parser.add_argument("--model", type=Path)
     parser.add_argument("--stochastic", action="store_true")
     parser.add_argument(
-        "--no-safety-shield",
+        "--safety-shield",
         action="store_true",
-        help="Disable wrong-pool prevention when using a neural model",
+        help=(
+            "Override steps into a lethal pool when using a neural model; see "
+            "reports/GENERALIZATION.md for its effect on success"
+        ),
     )
     return parser.parse_args()
 
@@ -77,7 +80,7 @@ def main():
                     observation,
                     deterministic=not args.stochastic,
                 )
-                if not args.no_safety_shield:
+                if args.safety_shield:
                     action = shield_action(env, action)
             observation, _, terminated, truncated, info = env.step(action)
             if env.window_closed:
