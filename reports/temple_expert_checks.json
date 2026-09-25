@@ -1,0 +1,26 @@
+{
+  "stateless_vs_original": {
+    "seeds": [
+      90000,
+      90199
+    ],
+    "frames": 193136,
+    "disagreeing_frames": 0,
+    "original_expert_successes": 200
+  },
+  "demonstration_jumps": {
+    "seeds": [
+      0,
+      99
+    ],
+    "frames": 97579,
+    "jump_frames": {
+      "fire": 700,
+      "water": 700
+    },
+    "jump_share": {
+      "fire": 0.007173674663605899,
+      "water": 0.007173674663605899
+    }
+  }
+}

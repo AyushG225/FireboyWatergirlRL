@@ -54,7 +54,7 @@ python scripts/train_temple.py
 
 Run `python scripts/train_temple.py --quick` first to smoke-test the full
 pipeline. See the [temple report](reports/TEMPLE.md) and
-[`temple_expert_100.json`](reports/temple_expert_100.json) for the exact
+[`temple_expert_100.json`](reports/archive/temple/temple_expert_100.json) for the exact
 mechanics and benchmark.
 
 ## Solve a brand-new level
