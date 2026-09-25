@@ -1,0 +1,842 @@
+{
+  "test_seeds": [
+    100000,
+    100999
+  ],
+  "selection": "each run's checkpoint was chosen on validation seeds 90000+",
+  "summary": [
+    {
+      "config": "bc_ppo",
+      "variant": "bc_only",
+      "runs": 3,
+      "success_rate_mean": 0.001,
+      "success_rate_std": 0.0017320508075688772,
+      "success_rate_min": 0.0,
+      "success_rate_max": 0.003,
+      "hazard_rate_mean": 0.9883333333333333,
+      "timeout_rate_mean": 0.010666666666666666,
+      "mean_length_mean": 48.64566666666667,
+      "per_difficulty_mean_counts": {
+        "0": {
+          "layouts": 333.0,
+          "successes": 0.0,
+          "hazards": 333.0,
+          "timeouts": 0.0
+        },
+        "1": {
+          "layouts": 334.0,
+          "successes": 1.0,
+          "hazards": 324.3333333333333,
+          "timeouts": 8.666666666666666
+        },
+        "2": {
+          "layouts": 333.0,
+          "successes": 0.0,
+          "hazards": 331.0,
+          "timeouts": 2.0
+        }
+      }
+    },
+    {
+      "config": "bc_ppo",
+      "variant": "policy",
+      "runs": 3,
+      "success_rate_mean": 0.9733333333333333,
+      "success_rate_std": 0.01677299416721218,
+      "success_rate_min": 0.954,
+      "success_rate_max": 0.984,
+      "hazard_rate_mean": 0.0033333333333333335,
+      "timeout_rate_mean": 0.023333333333333334,
+      "mean_length_mean": 145.55766666666668,
+      "per_difficulty_mean_counts": {
+        "0": {
+          "layouts": 333.0,
+          "successes": 332.0,
+          "hazards": 1.0,
+          "timeouts": 0.0
+        },
+        "1": {
+          "layouts": 334.0,
+          "successes": 329.6666666666667,
+          "hazards": 1.6666666666666667,
+          "timeouts": 2.6666666666666665
+        },
+        "2": {
+          "layouts": 333.0,
+          "successes": 311.6666666666667,
+          "hazards": 0.6666666666666666,
+          "timeouts": 20.666666666666668
+        }
+      }
+    },
+    {
+      "config": "bc_ppo",
+      "variant": "policy_shield",
+      "runs": 3,
+      "success_rate_mean": 0.953,
+      "success_rate_std": 0.014106735979665897,
+      "success_rate_min": 0.94,
+      "success_rate_max": 0.968,
+      "hazard_rate_mean": 0.013999999999999999,
+      "timeout_rate_mean": 0.033,
+      "mean_length_mean": 147.48666666666668,
+      "per_difficulty_mean_counts": {
+        "0": {
+          "layouts": 333.0,
+          "successes": 333.0,
+          "hazards": 0.0,
+          "timeouts": 0.0
+        },
+        "1": {
+          "layouts": 334.0,
+          "successes": 323.0,
+          "hazards": 1.6666666666666667,
+          "timeouts": 9.333333333333334
+        },
+        "2": {
+          "layouts": 333.0,
+          "successes": 297.0,
+          "hazards": 12.333333333333334,
+          "timeouts": 23.666666666666668
+        }
+      }
+    },
+    {
+      "config": "planner",
+      "variant": "planner",
+      "runs": 1,
+      "success_rate_mean": 1.0,
+      "success_rate_std": 0.0,
+      "success_rate_min": 1.0,
+      "success_rate_max": 1.0,
+      "hazard_rate_mean": 0.0,
+      "timeout_rate_mean": 0.0,
+      "mean_length_mean": 183.096,
+      "per_difficulty_mean_counts": {
+        "0": {
+          "layouts": 333.0,
+          "successes": 333.0,
+          "hazards": 0.0,
+          "timeouts": 0.0
+        },
+        "1": {
+          "layouts": 334.0,
+          "successes": 334.0,
+          "hazards": 0.0,
+          "timeouts": 0.0
+        },
+        "2": {
+          "layouts": 333.0,
+          "successes": 333.0,
+          "hazards": 0.0,
+          "timeouts": 0.0
+        }
+      }
+    },
+    {
+      "config": "ppo_only",
+      "variant": "policy",
+      "runs": 3,
+      "success_rate_mean": 0.0,
+      "success_rate_std": 0.0,
+      "success_rate_min": 0.0,
+      "success_rate_max": 0.0,
+      "hazard_rate_mean": 0.561,
+      "timeout_rate_mean": 0.43900000000000006,
+      "mean_length_mean": 289.11966666666666,
+      "per_difficulty_mean_counts": {
+        "0": {
+          "layouts": 333.0,
+          "successes": 0.0,
+          "hazards": 108.66666666666667,
+          "timeouts": 224.33333333333334
+        },
+        "1": {
+          "layouts": 334.0,
+          "successes": 0.0,
+          "hazards": 237.33333333333334,
+          "timeouts": 96.66666666666667
+        },
+        "2": {
+          "layouts": 333.0,
+          "successes": 0.0,
+          "hazards": 215.0,
+          "timeouts": 118.0
+        }
+      }
+    },
+    {
+      "config": "ppo_only",
+      "variant": "policy_shield",
+      "runs": 3,
+      "success_rate_mean": 0.0,
+      "success_rate_std": 0.0,
+      "success_rate_min": 0.0,
+      "success_rate_max": 0.0,
+      "hazard_rate_mean": 0.49666666666666665,
+      "timeout_rate_mean": 0.5033333333333333,
+      "mean_length_mean": 292.2033333333333,
+      "per_difficulty_mean_counts": {
+        "0": {
+          "layouts": 333.0,
+          "successes": 0.0,
+          "hazards": 100.0,
+          "timeouts": 233.0
+        },
+        "1": {
+          "layouts": 334.0,
+          "successes": 0.0,
+          "hazards": 205.33333333333334,
+          "timeouts": 128.66666666666666
+        },
+        "2": {
+          "layouts": 333.0,
+          "successes": 0.0,
+          "hazards": 191.33333333333334,
+          "timeouts": 141.66666666666666
+        }
+      }
+    }
+  ],
+  "runs": [
+    {
+      "config": "bc_ppo",
+      "training_seed": 0,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "bc_only",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s0_bc.zip",
+      "layouts": 1000,
+      "successes": 3,
+      "hazards": 965,
+      "timeouts": 32,
+      "mean_return": -8.893343523297204,
+      "mean_length": 55.158,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.008982035928143712,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 333,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 3,
+          "hazards": 305,
+          "timeouts": 26
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 327,
+          "timeouts": 6
+        }
+      },
+      "success_rate": 0.003
+    },
+    {
+      "config": "bc_ppo",
+      "training_seed": 0,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s0_2750000_steps.zip",
+      "layouts": 1000,
+      "successes": 984,
+      "hazards": 0,
+      "timeouts": 16,
+      "mean_return": 81.37480057116335,
+      "mean_length": 152.209,
+      "per_difficulty_success": {
+        "0": 1.0,
+        "1": 0.9790419161676647,
+        "2": 0.972972972972973
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 333,
+          "hazards": 0,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 327,
+          "hazards": 0,
+          "timeouts": 7
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 324,
+          "hazards": 0,
+          "timeouts": 9
+        }
+      },
+      "success_rate": 0.984
+    },
+    {
+      "config": "bc_ppo",
+      "training_seed": 0,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy_shield",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s0_2750000_steps.zip",
+      "layouts": 1000,
+      "successes": 968,
+      "hazards": 1,
+      "timeouts": 31,
+      "mean_return": 80.20993726395011,
+      "mean_length": 153.367,
+      "per_difficulty_success": {
+        "0": 1.0,
+        "1": 0.9251497005988024,
+        "2": 0.978978978978979
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 333,
+          "hazards": 0,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 309,
+          "hazards": 1,
+          "timeouts": 24
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 326,
+          "hazards": 0,
+          "timeouts": 7
+        }
+      },
+      "success_rate": 0.968
+    },
+    {
+      "config": "bc_ppo",
+      "training_seed": 1,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "bc_only",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s1_bc.zip",
+      "layouts": 1000,
+      "successes": 0,
+      "hazards": 1000,
+      "timeouts": 0,
+      "mean_return": -9.331028821427015,
+      "mean_length": 45.389,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 333,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 0,
+          "hazards": 334,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 333,
+          "timeouts": 0
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "config": "bc_ppo",
+      "training_seed": 1,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s1_final.zip",
+      "layouts": 1000,
+      "successes": 982,
+      "hazards": 8,
+      "timeouts": 10,
+      "mean_return": 81.06910142388888,
+      "mean_length": 142.769,
+      "per_difficulty_success": {
+        "0": 0.990990990990991,
+        "1": 0.9820359281437125,
+        "2": 0.972972972972973
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 330,
+          "hazards": 3,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 328,
+          "hazards": 5,
+          "timeouts": 1
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 324,
+          "hazards": 0,
+          "timeouts": 9
+        }
+      },
+      "success_rate": 0.982
+    },
+    {
+      "config": "bc_ppo",
+      "training_seed": 1,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy_shield",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s1_final.zip",
+      "layouts": 1000,
+      "successes": 951,
+      "hazards": 22,
+      "timeouts": 27,
+      "mean_return": 78.2903079420521,
+      "mean_length": 148.503,
+      "per_difficulty_success": {
+        "0": 1.0,
+        "1": 0.9880239520958084,
+        "2": 0.8648648648648649
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 333,
+          "hazards": 0,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 330,
+          "hazards": 0,
+          "timeouts": 4
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 288,
+          "hazards": 22,
+          "timeouts": 23
+        }
+      },
+      "success_rate": 0.951
+    },
+    {
+      "config": "bc_ppo",
+      "training_seed": 2,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "bc_only",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s2_bc.zip",
+      "layouts": 1000,
+      "successes": 0,
+      "hazards": 1000,
+      "timeouts": 0,
+      "mean_return": -9.331033821427017,
+      "mean_length": 45.39,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 333,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 0,
+          "hazards": 334,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 333,
+          "timeouts": 0
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "config": "bc_ppo",
+      "training_seed": 2,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s2_3000000_steps.zip",
+      "layouts": 1000,
+      "successes": 954,
+      "hazards": 2,
+      "timeouts": 44,
+      "mean_return": 78.69468513499159,
+      "mean_length": 141.695,
+      "per_difficulty_success": {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 0.8618618618618619
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 333,
+          "hazards": 0,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 334,
+          "hazards": 0,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 287,
+          "hazards": 2,
+          "timeouts": 44
+        }
+      },
+      "success_rate": 0.954
+    },
+    {
+      "config": "bc_ppo",
+      "training_seed": 2,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy_shield",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s2_3000000_steps.zip",
+      "layouts": 1000,
+      "successes": 940,
+      "hazards": 19,
+      "timeouts": 41,
+      "mean_return": 77.44922154837064,
+      "mean_length": 140.59,
+      "per_difficulty_success": {
+        "0": 1.0,
+        "1": 0.9880239520958084,
+        "2": 0.8318318318318318
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 333,
+          "hazards": 0,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 330,
+          "hazards": 4,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 277,
+          "hazards": 15,
+          "timeouts": 41
+        }
+      },
+      "success_rate": 0.94
+    },
+    {
+      "config": "ppo_only",
+      "training_seed": 0,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy",
+      "checkpoint": "checkpoints/generalist_v2/gen_nobc_s0_500000_steps.zip",
+      "layouts": 1000,
+      "successes": 0,
+      "hazards": 658,
+      "timeouts": 342,
+      "mean_return": -8.487706421442507,
+      "mean_length": 281.822,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 27,
+          "timeouts": 306
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 0,
+          "hazards": 332,
+          "timeouts": 2
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 299,
+          "timeouts": 34
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "config": "ppo_only",
+      "training_seed": 0,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy_shield",
+      "checkpoint": "checkpoints/generalist_v2/gen_nobc_s0_500000_steps.zip",
+      "layouts": 1000,
+      "successes": 0,
+      "hazards": 447,
+      "timeouts": 553,
+      "mean_return": -7.4691060862379075,
+      "mean_length": 290.539,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 0,
+          "timeouts": 333
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 0,
+          "hazards": 190,
+          "timeouts": 144
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 257,
+          "timeouts": 76
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "config": "ppo_only",
+      "training_seed": 1,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy",
+      "checkpoint": "checkpoints/generalist_v2/gen_nobc_s1_1750000_steps.zip",
+      "layouts": 1000,
+      "successes": 0,
+      "hazards": 660,
+      "timeouts": 340,
+      "mean_return": -7.759207262255597,
+      "mean_length": 291.86,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 299,
+          "timeouts": 34
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 0,
+          "hazards": 122,
+          "timeouts": 212
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 239,
+          "timeouts": 94
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "config": "ppo_only",
+      "training_seed": 1,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy_shield",
+      "checkpoint": "checkpoints/generalist_v2/gen_nobc_s1_1750000_steps.zip",
+      "layouts": 1000,
+      "successes": 0,
+      "hazards": 688,
+      "timeouts": 312,
+      "mean_return": -7.915768156799261,
+      "mean_length": 292.106,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 300,
+          "timeouts": 33
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 0,
+          "hazards": 162,
+          "timeouts": 172
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 226,
+          "timeouts": 107
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "config": "ppo_only",
+      "training_seed": 2,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy",
+      "checkpoint": "checkpoints/generalist_v2/gen_nobc_s2_500000_steps.zip",
+      "layouts": 1000,
+      "successes": 0,
+      "hazards": 365,
+      "timeouts": 635,
+      "mean_return": -7.422120548520941,
+      "mean_length": 293.677,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 0,
+          "timeouts": 333
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 0,
+          "hazards": 258,
+          "timeouts": 76
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 107,
+          "timeouts": 226
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "config": "ppo_only",
+      "training_seed": 2,
+      "count": 1000,
+      "seed_start": 100000,
+      "variant": "policy_shield",
+      "checkpoint": "checkpoints/generalist_v2/gen_nobc_s2_500000_steps.zip",
+      "layouts": 1000,
+      "successes": 0,
+      "hazards": 355,
+      "timeouts": 645,
+      "mean_return": -7.363386771060063,
+      "mean_length": 293.965,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 0,
+          "timeouts": 333
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 0,
+          "hazards": 264,
+          "timeouts": 70
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 0,
+          "hazards": 91,
+          "timeouts": 242
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "config": "planner",
+      "variant": "planner",
+      "training_seed": null,
+      "count": 1000,
+      "seed_start": 100000,
+      "layouts": 1000,
+      "successes": 1000,
+      "hazards": 0,
+      "timeouts": 0,
+      "mean_return": 82.44230669398517,
+      "mean_length": 183.096,
+      "per_difficulty_success": {
+        "0": 1.0,
+        "1": 1.0,
+        "2": 1.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 333,
+          "successes": 333,
+          "hazards": 0,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 334,
+          "successes": 334,
+          "hazards": 0,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 333,
+          "successes": 333,
+          "hazards": 0,
+          "timeouts": 0
+        }
+      },
+      "success_rate": 1.0
+    }
+  ]
+}

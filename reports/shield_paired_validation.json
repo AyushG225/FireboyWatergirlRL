@@ -1,0 +1,70 @@
+{
+  "validation_seeds": [
+    90000,
+    90999
+  ],
+  "runs": [
+    {
+      "run": "gen_bc_s0",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s0_2750000_steps.zip",
+      "seed_start": 90000,
+      "count": 1000,
+      "pairs": {
+        "success -> success": 966,
+        "success -> timeout": 23,
+        "timeout -> timeout": 6,
+        "timeout -> success": 5
+      },
+      "rescued": 5,
+      "broken": 23,
+      "overrides_in_broken_episodes": {
+        "min": 1,
+        "max": 2
+      }
+    },
+    {
+      "run": "gen_bc_s1",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s1_final.zip",
+      "seed_start": 90000,
+      "count": 1000,
+      "pairs": {
+        "success -> success": 934,
+        "success -> hazard": 27,
+        "success -> timeout": 24,
+        "timeout -> timeout": 5,
+        "hazard -> success": 4,
+        "timeout -> success": 4,
+        "timeout -> hazard": 1,
+        "hazard -> hazard": 1
+      },
+      "rescued": 8,
+      "broken": 51,
+      "overrides_in_broken_episodes": {
+        "min": 1,
+        "max": 4
+      }
+    },
+    {
+      "run": "gen_bc_s2",
+      "checkpoint": "checkpoints/generalist_v2/gen_bc_s2_3000000_steps.zip",
+      "seed_start": 90000,
+      "count": 1000,
+      "pairs": {
+        "success -> success": 943,
+        "timeout -> timeout": 26,
+        "success -> hazard": 11,
+        "success -> timeout": 9,
+        "timeout -> success": 4,
+        "hazard -> hazard": 3,
+        "timeout -> hazard": 2,
+        "hazard -> timeout": 2
+      },
+      "rescued": 4,
+      "broken": 20,
+      "overrides_in_broken_episodes": {
+        "min": 1,
+        "max": 2
+      }
+    }
+  ]
+}

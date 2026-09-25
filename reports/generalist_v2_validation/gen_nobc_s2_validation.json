@@ -1,0 +1,538 @@
+{
+  "seed_protocol": {
+    "train": [
+      0,
+      90000
+    ],
+    "validation_start": 90000,
+    "validation_layouts": 300,
+    "test_start": 100000
+  },
+  "behavior_cloning": false,
+  "demo_layouts": 0,
+  "bc_epochs": 0,
+  "ppo_timesteps": 3000000,
+  "seed": 2,
+  "selection_rule": "highest validation success among PPO checkpoints, then fewer hazards, then earlier",
+  "selected_checkpoint": "gen_nobc_s2_500000_steps",
+  "history": [
+    {
+      "stage": "init",
+      "checkpoint": "gen_nobc_s2_init",
+      "timesteps": 0,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 213,
+      "timeouts": 87,
+      "mean_return": -9.14614055368003,
+      "mean_length": 119.22,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 13,
+          "timeouts": 87
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_250000_steps",
+      "timesteps": 250000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 253,
+      "timeouts": 47,
+      "mean_return": -8.683667672101373,
+      "mean_length": 269.37666666666667,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 80,
+          "timeouts": 20
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 84,
+          "timeouts": 16
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 89,
+          "timeouts": 11
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_500000_steps",
+      "timesteps": 500000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 106,
+      "timeouts": 194,
+      "mean_return": -7.357812459527847,
+      "mean_length": 294.6933333333333,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 0,
+          "timeouts": 100
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 63,
+          "timeouts": 37
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 43,
+          "timeouts": 57
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_750000_steps",
+      "timesteps": 750000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 185,
+      "timeouts": 115,
+      "mean_return": -8.199386829605025,
+      "mean_length": 285.7866666666667,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 0,
+          "timeouts": 100
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 89,
+          "timeouts": 11
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 96,
+          "timeouts": 4
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_1000000_steps",
+      "timesteps": 1000000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 167,
+      "timeouts": 133,
+      "mean_return": -7.85569363439549,
+      "mean_length": 291.4033333333333,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 29,
+          "timeouts": 71
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 66,
+          "timeouts": 34
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 72,
+          "timeouts": 28
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_1250000_steps",
+      "timesteps": 1250000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 169,
+      "timeouts": 131,
+      "mean_return": -7.909957720104773,
+      "mean_length": 290.33666666666664,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 0,
+          "timeouts": 100
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 78,
+          "timeouts": 22
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 91,
+          "timeouts": 9
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_1500000_steps",
+      "timesteps": 1500000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 170,
+      "timeouts": 130,
+      "mean_return": -7.818824405966209,
+      "mean_length": 286.39,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 3,
+          "timeouts": 97
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 91,
+          "timeouts": 9
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 76,
+          "timeouts": 24
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_1750000_steps",
+      "timesteps": 1750000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 194,
+      "timeouts": 106,
+      "mean_return": -8.203014982688419,
+      "mean_length": 289.6666666666667,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 0,
+          "timeouts": 100
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 94,
+          "timeouts": 6
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_2000000_steps",
+      "timesteps": 2000000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 200,
+      "timeouts": 100,
+      "mean_return": -8.052522460622821,
+      "mean_length": 292.6933333333333,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 82,
+          "timeouts": 18
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 40,
+          "timeouts": 60
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 78,
+          "timeouts": 22
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_2250000_steps",
+      "timesteps": 2250000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 217,
+      "timeouts": 83,
+      "mean_return": -8.10218567722358,
+      "mean_length": 290.12,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 17,
+          "timeouts": 83
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_2500000_steps",
+      "timesteps": 2500000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 295,
+      "timeouts": 5,
+      "mean_return": -9.476896831939936,
+      "mean_length": 285.21666666666664,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 95,
+          "timeouts": 5
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_2750000_steps",
+      "timesteps": 2750000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 294,
+      "timeouts": 6,
+      "mean_return": -9.422238096775612,
+      "mean_length": 285.14,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 94,
+          "timeouts": 6
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_3000000_steps",
+      "timesteps": 3000000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 292,
+      "timeouts": 8,
+      "mean_return": -9.44261373044943,
+      "mean_length": 282.87333333333333,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 92,
+          "timeouts": 8
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        }
+      },
+      "success_rate": 0.0
+    },
+    {
+      "stage": "ppo",
+      "checkpoint": "gen_nobc_s2_final",
+      "timesteps": 3000000,
+      "layouts": 300,
+      "successes": 0,
+      "hazards": 294,
+      "timeouts": 6,
+      "mean_return": -9.475474625565543,
+      "mean_length": 283.25,
+      "per_difficulty_success": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0
+      },
+      "per_difficulty": {
+        "0": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 99,
+          "timeouts": 1
+        },
+        "1": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 95,
+          "timeouts": 5
+        },
+        "2": {
+          "layouts": 100,
+          "successes": 0,
+          "hazards": 100,
+          "timeouts": 0
+        }
+      },
+      "success_rate": 0.0
+    }
+  ]
+}
