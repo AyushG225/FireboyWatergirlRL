@@ -19,17 +19,38 @@ class TempleRun:
 
 @dataclass
 class TempleExpert:
-    """Closed-loop geometry controller for the alternating-lift topology."""
+    """Closed-loop geometry controller for the alternating-lift topology.
+
+    By default the expert remembers which lift each character is heading for.
+    With ``stateless=True`` it instead reads the stage from the character's
+    height on every call, so it can label any state, including states reached
+    by a different controller. DAgger relies on that mode.
+    """
 
     stages: dict[str, int] = field(default_factory=lambda: {"fire": 0, "water": 0})
+    stateless: bool = False
 
     def reset(self) -> None:
         self.stages = {"fire": 0, "water": 0}
 
     def action(self, env: TempleEnv) -> int:
+        if self.stateless:
+            self.stages = {
+                who: self.stage_from_height(env, who) for who in ("fire", "water")
+            }
         fire_action = self._character_action(env, "fire")
         water_action = self._character_action(env, "water")
         return encode_joint_action(fire_action, water_action)
+
+    @staticmethod
+    def stage_from_height(env: TempleEnv, who: str) -> int:
+        """Return how many upper floors the character stands on or above.
+
+        Floors are 125 px apart and a jump peaks about 107 px up, so a jump
+        never reaches the next floor's threshold.
+        """
+        y = getattr(env, f"{who}_y")
+        return sum(int(y <= floor_y + 5.0) for floor_y in env.level.floor_y[1:])
 
     def _character_action(self, env: TempleEnv, who: str) -> int:
         if getattr(env, f"{who}_at_goal"):

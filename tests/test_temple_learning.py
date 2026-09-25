@@ -9,6 +9,8 @@ import numpy as np
 from gymnasium.utils.env_checker import check_env
 
 from firewater.temple_env import TempleEnv
+from firewater.temple_evaluation import evaluate_temple_expert
+from firewater.temple_expert import TempleExpert
 
 
 class ObservationModeTests(unittest.TestCase):
@@ -45,6 +47,40 @@ class ObservationModeTests(unittest.TestCase):
         self.assertAlmostEqual(features[0], 0.25, places=5)
         # Water is immune to water pools, so its right sensor skips this one.
         self.assertGreater(features[10], 0.25)
+
+
+class ExpertLabelTests(unittest.TestCase):
+    def test_stateless_expert_matches_stateful_expert_on_its_own_path(self):
+        env = TempleEnv(level_seed=90_004)
+        env.reset(seed=0)
+        stateful = TempleExpert()
+        stateless = TempleExpert(stateless=True)
+        for _ in range(env.max_steps):
+            action = stateful.action(env)
+            self.assertEqual(action, stateless.action(env))
+            _, _, terminated, truncated, info = env.step(action)
+            if terminated or truncated:
+                break
+        self.assertEqual(info["reason"], "success")
+
+    def test_stage_from_height_counts_floors_reached(self):
+        env = TempleEnv(level_seed=90_005)
+        env.reset(seed=0)
+        for floor_index, floor_y in enumerate(env.level.floor_y):
+            env.fire_y = floor_y
+            self.assertEqual(TempleExpert.stage_from_height(env, "fire"), floor_index)
+
+
+class TempleEvaluationTests(unittest.TestCase):
+    def test_batched_expert_evaluation_is_consistent(self):
+        result = evaluate_temple_expert([90_010, 90_011, 90_012])
+        self.assertEqual(result.successes, 3)
+        self.assertEqual(result.hazards + result.timeouts, 0)
+        for episode in result.episodes:
+            self.assertLessEqual(episode.both_moving_frames, episode.both_command_frames)
+            self.assertLessEqual(episode.both_command_frames, episode.steps)
+        self.assertGreater(result.both_moving_share, 0.0)
+        self.assertLess(result.both_moving_share, 1.0)
 
 
 if __name__ == "__main__":
