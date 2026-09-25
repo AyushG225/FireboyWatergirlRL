@@ -60,6 +60,9 @@ screenshots/
 # -------------------------
 # IDE / Editor files
 # -------------------------
+# Claude Code
+.claude/
+
 # VS Code
 .vscode/
 *.code-workspace
