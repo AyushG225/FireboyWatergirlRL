@@ -218,11 +218,11 @@ class RolloutLogger(BaseCallback):
         self.ep_levels = []
 
     def _on_training_start(self) -> None:
-        try:
+        # Ask first: a failed get_attr kills a SubprocVecEnv worker, which then
+        # surfaces later as a BrokenPipeError on the next step.
+        if self.training_env.has_attr("level_id"):
             level_ids = self.training_env.get_attr("level_id")
             print(f"[rollout] vector environment levels: {level_ids}")
-        except Exception:
-            pass
 
     def _on_step(self) -> bool:
         for info in self.locals.get("infos", []):

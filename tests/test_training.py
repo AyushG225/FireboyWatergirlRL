@@ -3,9 +3,12 @@ import unittest
 from pathlib import Path
 
 import numpy as np
+from stable_baselines3 import PPO
+from stable_baselines3.common.vec_env import SubprocVecEnv
 
 from firewater.firewater_env import FireWaterEnv
-from firewater.train_ppo import CURRICULUM, assign_levels, load_demos
+from firewater.temple_env import TempleEnv
+from firewater.train_ppo import CURRICULUM, RolloutLogger, assign_levels, load_demos
 
 
 class TrainingUtilityTests(unittest.TestCase):
@@ -98,6 +101,23 @@ class TrainingUtilityTests(unittest.TestCase):
         self.assertEqual(actions.tolist(), [1])
         self.assertEqual(observations[0, 23], 0.0)  # normalized level 2 id
         env.close()
+
+
+def _make_temple():
+    return TempleEnv(seed_range=(0, 90_000))
+
+
+class SubprocessLoggingTests(unittest.TestCase):
+    def test_rollout_logger_keeps_subprocess_workers_alive(self):
+        # A failed get_attr("level_id") used to kill the worker process, which
+        # then surfaced as a BrokenPipeError on the next step.
+        vec_env = SubprocVecEnv([_make_temple, _make_temple])
+        try:
+            model = PPO("MlpPolicy", vec_env, n_steps=8, batch_size=16, device="cpu")
+            model.learn(total_timesteps=16, callback=RolloutLogger(print_freq_episodes=1))
+            self.assertEqual(model.num_timesteps, 16)
+        finally:
+            vec_env.close()
 
 
 if __name__ == "__main__":
