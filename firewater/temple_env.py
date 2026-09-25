@@ -900,12 +900,12 @@ class TempleEnv(gym.Env):
         )
         self.screen.blit(title, (self.W // 2 - title.get_width() // 2, 13))
         fire_text = self._font(23).render(
-            f"FIRE  ◆ {int(self._gem_fraction('fire') * 3)}/3",
+            f"FIRE GEMS {int(self._gem_fraction('fire') * 3)}/3",
             True,
             (255, 93, 55),
         )
         water_text = self._font(23).render(
-            f"WATER  ◆ {int(self._gem_fraction('water') * 3)}/3",
+            f"WATER GEMS {int(self._gem_fraction('water') * 3)}/3",
             True,
             (78, 199, 255),
         )
