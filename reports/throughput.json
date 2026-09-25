@@ -1,0 +1,167 @@
+{
+  "machine": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "cpu": "Apple M4 Pro",
+    "cpu_count": 12,
+    "python": "3.12.12"
+  },
+  "steps_per_measurement": 100000,
+  "repeats": 3,
+  "actions": "uniform random",
+  "results": [
+    {
+      "env": "firewater",
+      "mode": "single",
+      "n_envs": 1,
+      "steps_per_sec_median": 55008.975163667164,
+      "steps_per_sec_samples": [
+        55008.975163667164,
+        54980.942363205155,
+        55526.93219020067
+      ]
+    },
+    {
+      "env": "firewater",
+      "mode": "dummy_vec_env",
+      "n_envs": 4,
+      "steps_per_sec_median": 44238.24588907327,
+      "steps_per_sec_samples": [
+        43987.78687689881,
+        44238.24588907327,
+        45022.538846090065
+      ]
+    },
+    {
+      "env": "firewater",
+      "mode": "subproc_vec_env",
+      "n_envs": 4,
+      "steps_per_sec_median": 41648.60736249686,
+      "steps_per_sec_samples": [
+        42192.735359380364,
+        41648.60736249686,
+        41332.98959088259
+      ]
+    },
+    {
+      "env": "firewater",
+      "mode": "dummy_vec_env",
+      "n_envs": 8,
+      "steps_per_sec_median": 46411.377539820365,
+      "steps_per_sec_samples": [
+        45856.17696913669,
+        46541.978514953385,
+        46411.377539820365
+      ]
+    },
+    {
+      "env": "firewater",
+      "mode": "subproc_vec_env",
+      "n_envs": 8,
+      "steps_per_sec_median": 54314.25235222525,
+      "steps_per_sec_samples": [
+        52368.148801175696,
+        54314.25235222525,
+        54872.430620417406
+      ]
+    },
+    {
+      "env": "firewater",
+      "mode": "dummy_vec_env",
+      "n_envs": 12,
+      "steps_per_sec_median": 46922.740305030784,
+      "steps_per_sec_samples": [
+        46922.740305030784,
+        45517.90148055055,
+        47001.25943576728
+      ]
+    },
+    {
+      "env": "firewater",
+      "mode": "subproc_vec_env",
+      "n_envs": 12,
+      "steps_per_sec_median": 60849.36020305635,
+      "steps_per_sec_samples": [
+        60849.36020305635,
+        59267.6155702993,
+        61120.574438654556
+      ]
+    },
+    {
+      "env": "temple",
+      "mode": "single",
+      "n_envs": 1,
+      "steps_per_sec_median": 4525.282541511974,
+      "steps_per_sec_samples": [
+        4556.158610127536,
+        4525.282541511974,
+        4501.931010323088
+      ]
+    },
+    {
+      "env": "temple",
+      "mode": "dummy_vec_env",
+      "n_envs": 4,
+      "steps_per_sec_median": 4335.429922427867,
+      "steps_per_sec_samples": [
+        4372.841011028686,
+        4335.429922427867,
+        4325.532948365901
+      ]
+    },
+    {
+      "env": "temple",
+      "mode": "subproc_vec_env",
+      "n_envs": 4,
+      "steps_per_sec_median": 11542.30540401277,
+      "steps_per_sec_samples": [
+        11434.477062800408,
+        11542.30540401277,
+        11656.98782818116
+      ]
+    },
+    {
+      "env": "temple",
+      "mode": "dummy_vec_env",
+      "n_envs": 8,
+      "steps_per_sec_median": 4384.620872147419,
+      "steps_per_sec_samples": [
+        4389.2781032343655,
+        4333.493762883575,
+        4384.620872147419
+      ]
+    },
+    {
+      "env": "temple",
+      "mode": "subproc_vec_env",
+      "n_envs": 8,
+      "steps_per_sec_median": 18508.28455098656,
+      "steps_per_sec_samples": [
+        20660.225394012738,
+        18052.85664192712,
+        18508.28455098656
+      ]
+    },
+    {
+      "env": "temple",
+      "mode": "dummy_vec_env",
+      "n_envs": 12,
+      "steps_per_sec_median": 4391.859405375218,
+      "steps_per_sec_samples": [
+        4391.859405375218,
+        4431.85613992616,
+        4379.195886886587
+      ]
+    },
+    {
+      "env": "temple",
+      "mode": "subproc_vec_env",
+      "n_envs": 12,
+      "steps_per_sec_median": 19471.380840353526,
+      "steps_per_sec_samples": [
+        19471.380840353526,
+        19540.380149810935,
+        18584.756897368676
+      ]
+    }
+  ]
+}
