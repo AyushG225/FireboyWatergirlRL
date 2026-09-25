@@ -19,6 +19,7 @@ from firewater.temple_expert import TempleExpert
 from firewater.train_ppo import behavior_clone
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import train_generalist  # noqa: E402
 import train_temple  # noqa: E402
 
 
@@ -140,6 +141,15 @@ class TempleTrainerTests(unittest.TestCase):
         self.assertEqual(betas[-1], 0.0)
         self.assertEqual(betas[-2], 0.0)
         self.assertTrue(all(a >= b for a, b in zip(betas, betas[1:], strict=False)))
+
+
+class SeedProtocolTests(unittest.TestCase):
+    def test_train_validation_and_test_ranges_are_disjoint(self):
+        for module in (train_temple, train_generalist):
+            low, high = module.TRAIN_SEED_RANGE
+            self.assertEqual(low, 0)
+            self.assertLessEqual(high, module.VALIDATION_SEED_START)
+            self.assertLess(module.VALIDATION_SEED_START, 100_000)
 
 
 if __name__ == "__main__":

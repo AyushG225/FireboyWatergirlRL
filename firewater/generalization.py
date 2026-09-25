@@ -21,6 +21,8 @@ class GeneralizationEvaluation:
     mean_return: float
     mean_length: float
     per_difficulty_success: dict[int, float]
+    # difficulty -> {"layouts", "successes", "hazards", "timeouts"}
+    per_difficulty: dict[int, dict[str, int]]
 
     @property
     def success_rate(self) -> float:
@@ -30,6 +32,29 @@ class GeneralizationEvaluation:
         result = asdict(self)
         result["success_rate"] = self.success_rate
         return result
+
+
+def _difficulty_breakdown(
+    outcomes: dict[int, list[str]],
+) -> tuple[dict[int, float], dict[int, dict[str, int]]]:
+    success_rates = {
+        difficulty: (
+            float(np.mean([reason == "success" for reason in reasons]))
+            if reasons
+            else 0.0
+        )
+        for difficulty, reasons in outcomes.items()
+    }
+    counts = {
+        difficulty: {
+            "layouts": len(reasons),
+            "successes": reasons.count("success"),
+            "hazards": reasons.count("hazard"),
+            "timeouts": reasons.count("timeout"),
+        }
+        for difficulty, reasons in outcomes.items()
+    }
+    return success_rates, counts
 
 
 def evaluate_generalist(
@@ -49,7 +74,7 @@ def evaluate_generalist(
     terminal_counts = {"success": 0, "hazard": 0, "timeout": 0}
     returns = []
     lengths = []
-    difficulty_outcomes: dict[int, list[bool]] = {0: [], 1: [], 2: []}
+    difficulty_outcomes: dict[int, list[str]] = {0: [], 1: [], 2: []}
 
     for layout_seed in seeds:
         env = FireWaterEnv(
@@ -82,8 +107,9 @@ def evaluate_generalist(
         returns.append(episode_return)
         lengths.append(episode_length)
         difficulty = generate_level(layout_seed).difficulty
-        difficulty_outcomes[difficulty].append(reason == "success")
+        difficulty_outcomes[difficulty].append(str(reason))
 
+    success_rates, counts = _difficulty_breakdown(difficulty_outcomes)
     return GeneralizationEvaluation(
         layouts=len(seeds),
         successes=terminal_counts["success"],
@@ -91,10 +117,8 @@ def evaluate_generalist(
         timeouts=terminal_counts["timeout"],
         mean_return=float(np.mean(returns)),
         mean_length=float(np.mean(lengths)),
-        per_difficulty_success={
-            difficulty: float(np.mean(outcomes)) if outcomes else 0.0
-            for difficulty, outcomes in difficulty_outcomes.items()
-        },
+        per_difficulty_success=success_rates,
+        per_difficulty=counts,
     )
 
 
@@ -106,7 +130,7 @@ def evaluate_planner(seeds: Iterable[int]) -> GeneralizationEvaluation:
 
     returns = []
     lengths = []
-    difficulty_outcomes: dict[int, list[bool]] = {0: [], 1: [], 2: []}
+    difficulty_outcomes: dict[int, list[str]] = {0: [], 1: [], 2: []}
     for layout_seed in seeds:
         env = FireWaterEnv(
             procedural=True,
@@ -123,21 +147,18 @@ def evaluate_planner(seeds: Iterable[int]) -> GeneralizationEvaluation:
         finally:
             env.close()
         difficulty = generate_level(layout_seed).difficulty
-        difficulty_outcomes[difficulty].append(success)
+        difficulty_outcomes[difficulty].append("success" if success else "failure")
 
+    success_rates, counts = _difficulty_breakdown(difficulty_outcomes)
     return GeneralizationEvaluation(
         layouts=len(seeds),
-        successes=sum(
-            int(value) for outcomes in difficulty_outcomes.values() for value in outcomes
-        ),
+        successes=sum(count["successes"] for count in counts.values()),
         hazards=0,
         timeouts=0,
         mean_return=float(np.mean(returns)),
         mean_length=float(np.mean(lengths)),
-        per_difficulty_success={
-            difficulty: float(np.mean(outcomes)) if outcomes else 0.0
-            for difficulty, outcomes in difficulty_outcomes.items()
-        },
+        per_difficulty_success=success_rates,
+        per_difficulty=counts,
     )
 
 

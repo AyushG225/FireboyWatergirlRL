@@ -42,7 +42,6 @@ jobs:
           python scripts/train_generalist.py
           --quick
           --run-name firewater-generalist-ci
-          --save-every 0
           --output-dir /tmp/firewater-generalist-checkpoints
           --log-dir /tmp/firewater-generalist-logs
           --tensorboard-dir /tmp/firewater-generalist-tensorboard

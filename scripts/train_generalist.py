@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 from stable_baselines3 import PPO
-from stable_baselines3.common.callbacks import CallbackList, CheckpointCallback
+from stable_baselines3.common.callbacks import BaseCallback, CallbackList
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv
@@ -15,10 +15,16 @@ import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
 from firewater.firewater_env import FireWaterEnv
 from firewater.generalization import evaluate_generalist, format_generalization
 from firewater.generalized_planner import plan_level
-from firewater.procedural_levels import held_out_seeds, training_seeds
+from firewater.procedural_levels import training_seeds
 from firewater.train_ppo import RolloutLogger, behavior_clone
 
 INFO_KEYWORDS = ("success", "dead", "timeout", "reason", "layout_seed")
+
+# Seed protocol: PPO and demonstrations draw from [0, 90000); checkpoints are
+# chosen on [90000, 100000); test layouts start at 100000 and are only touched
+# by scripts/evaluate_generalist.py.
+TRAIN_SEED_RANGE = (0, 90_000)
+VALIDATION_SEED_START = 90_000
 
 
 def make_procedural_env(
@@ -32,7 +38,7 @@ def make_procedural_env(
         env = FireWaterEnv(
             procedural=True,
             observation_mode="generalized",
-            procedural_seed_range=(0, 100_000),
+            procedural_seed_range=TRAIN_SEED_RANGE,
         )
         env.reset(seed=seed + rank)
         env.action_space.seed(seed + rank)
@@ -105,9 +111,54 @@ def generate_planner_demonstrations(
     )
 
 
-def save_evaluation(path: Path, result) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(result.to_dict(), indent=2) + "\n", encoding="utf-8")
+class ValidationCallback(BaseCallback):
+    """Every ``every`` steps, save a checkpoint and score it on validation."""
+
+    def __init__(self, seeds, every, output_dir, run_name, history, policy_seed):
+        super().__init__()
+        self.seeds = seeds
+        self.every = every
+        self.output_dir = output_dir
+        self.run_name = run_name
+        self.history = history
+        self.policy_seed = policy_seed
+        self.next_eval = every
+
+    def _on_step(self) -> bool:
+        if self.num_timesteps >= self.next_eval:
+            self.next_eval += self.every
+            record_validation(
+                self.model,
+                self.seeds,
+                f"{self.run_name}_{self.num_timesteps}_steps",
+                "ppo",
+                self.num_timesteps,
+                self.history,
+                self.output_dir,
+                self.policy_seed,
+            )
+        return True
+
+
+def record_validation(
+    model, seeds, name, stage, timesteps, history, output_dir, policy_seed
+):
+    model.save(output_dir / name)
+    result = evaluate_generalist(model, seeds, policy_seed=policy_seed)
+    history.append(
+        {"stage": stage, "checkpoint": name, "timesteps": timesteps} | result.to_dict()
+    )
+    print(f"[validation] {name}: {format_generalization(result)}")
+
+
+def select_checkpoint(history: list[dict]) -> dict:
+    """Highest validation success among PPO checkpoints, then fewer hazards,
+    then earlier."""
+    candidates = [entry for entry in history if entry["stage"] == "ppo"]
+    return max(
+        enumerate(candidates),
+        key=lambda item: (item[1]["successes"], -item[1]["hazards"], -item[0]),
+    )[1]
 
 
 def parse_args():
@@ -127,7 +178,7 @@ def parse_args():
     parser.add_argument("--timesteps", type=int)
     parser.add_argument("--demo-layouts", type=int)
     parser.add_argument("--bc-epochs", type=int)
-    parser.add_argument("--eval-layouts", type=int)
+    parser.add_argument("--validation-layouts", type=int)
     parser.add_argument("--no-bc", action="store_true")
     parser.add_argument("--ent-coef", type=float, default=0.002)
     parser.add_argument("--learning-rate", type=float, default=1e-4)
@@ -153,9 +204,9 @@ def resolve_settings(args):
         "bc_epochs": (
             args.bc_epochs if args.bc_epochs is not None else (1 if args.quick else 20)
         ),
-        "eval_layouts": configured(
-            args.eval_layouts,
-            3 if args.quick else 100,
+        "validation_layouts": configured(
+            args.validation_layouts,
+            3 if args.quick else 300,
         ),
     }
     if settings["n_envs"] < 1 or settings["n_steps"] < 2:
@@ -165,11 +216,13 @@ def resolve_settings(args):
         raise SystemExit(
             f"--batch-size must be between 1 and rollout size ({rollout_size})"
         )
-    for key in ("timesteps", "demo_layouts", "eval_layouts"):
+    for key in ("timesteps", "demo_layouts", "validation_layouts"):
         if settings[key] < 1:
             raise SystemExit(f"--{key.replace('_', '-')} must be at least 1")
     if settings["bc_epochs"] < 0:
         raise SystemExit("--bc-epochs must be non-negative")
+    if args.save_every < 1:
+        raise SystemExit("--save-every must be at least 1")
     if args.hidden_size < 1:
         raise SystemExit("--hidden-size must be at least 1")
     if args.ent_coef < 0 or args.learning_rate <= 0:
@@ -200,6 +253,7 @@ def main():
                 tensorboard_log=str(args.tensorboard_dir),
             )
             model.ent_coef = args.ent_coef
+            used_bc = False
             print(f"[train] resumed {args.resume}")
         else:
             model = PPO(
@@ -218,7 +272,8 @@ def main():
                 seed=args.seed,
                 device=args.device,
             )
-            if not args.no_bc and settings["bc_epochs"] > 0:
+            used_bc = not args.no_bc and settings["bc_epochs"] > 0
+            if used_bc:
                 demo_obs, demo_actions = generate_planner_demonstrations(
                     training_seeds(settings["demo_layouts"])
                 )
@@ -232,36 +287,77 @@ def main():
                     seed=args.seed,
                 )
 
-        eval_seeds = held_out_seeds(settings["eval_layouts"])
-        before = evaluate_generalist(model, eval_seeds, policy_seed=args.seed)
-        print(f"\n[eval] before PPO\n{format_generalization(before)}")
-        save_evaluation(
-            args.output_dir / f"{args.run_name}_before.json",
-            before,
+        validation_seeds = list(
+            range(
+                VALIDATION_SEED_START,
+                VALIDATION_SEED_START + settings["validation_layouts"],
+            )
+        )
+        history: list[dict] = []
+        start_stage = "resume" if args.resume else ("bc" if used_bc else "init")
+        record_validation(
+            model,
+            validation_seeds,
+            f"{args.run_name}_{start_stage}",
+            start_stage,
+            0,
+            history,
+            args.output_dir,
+            args.seed,
         )
 
-        callbacks = [RolloutLogger(print_freq_episodes=100)]
-        if args.save_every > 0:
-            callbacks.append(
-                CheckpointCallback(
-                    save_freq=max(args.save_every // settings["n_envs"], 1),
-                    save_path=str(args.output_dir),
-                    name_prefix=args.run_name,
-                )
-            )
+        callbacks = [
+            RolloutLogger(print_freq_episodes=100),
+            ValidationCallback(
+                validation_seeds,
+                args.save_every,
+                args.output_dir,
+                args.run_name,
+                history,
+                args.seed,
+            ),
+        ]
         model.learn(
             total_timesteps=settings["timesteps"],
             callback=CallbackList(callbacks),
-            reset_num_timesteps=False,
+            reset_num_timesteps=True,
             tb_log_name=args.run_name,
         )
+        record_validation(
+            model,
+            validation_seeds,
+            f"{args.run_name}_final",
+            "ppo",
+            settings["timesteps"],
+            history,
+            args.output_dir,
+            args.seed,
+        )
 
-        final_path = args.output_dir / f"{args.run_name}_final"
-        model.save(final_path)
-        after = evaluate_generalist(model, eval_seeds, policy_seed=args.seed)
-        print(f"\n[eval] after PPO\n{format_generalization(after)}")
-        save_evaluation(final_path.with_suffix(".json"), after)
-        print(f"[train] saved {final_path}.zip")
+        selected = select_checkpoint(history)
+        report = {
+            "seed_protocol": {
+                "train": list(TRAIN_SEED_RANGE),
+                "validation_start": VALIDATION_SEED_START,
+                "validation_layouts": settings["validation_layouts"],
+                "test_start": 100_000,
+            },
+            "behavior_cloning": used_bc,
+            "demo_layouts": settings["demo_layouts"] if used_bc else 0,
+            "bc_epochs": settings["bc_epochs"] if used_bc else 0,
+            "ppo_timesteps": settings["timesteps"],
+            "seed": args.seed,
+            "selection_rule": (
+                "highest validation success among PPO checkpoints, "
+                "then fewer hazards, then earlier"
+            ),
+            "selected_checkpoint": selected["checkpoint"],
+            "history": history,
+        }
+        report_path = args.output_dir / f"{args.run_name}_validation.json"
+        report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        print(f"[train] selected {selected['checkpoint']} on validation")
+        print(f"[train] wrote {report_path}")
     finally:
         active_model = locals().get("model")
         if active_model is not None and active_model.get_env() is not None:
