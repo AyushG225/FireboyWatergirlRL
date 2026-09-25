@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import asdict, dataclass
-from typing import Iterable
 
 import numpy as np
 from stable_baselines3.common.utils import set_random_seed

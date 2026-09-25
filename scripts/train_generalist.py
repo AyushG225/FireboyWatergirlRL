@@ -12,13 +12,11 @@ from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv
 
 import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
-
 from firewater.firewater_env import FireWaterEnv
 from firewater.generalization import evaluate_generalist, format_generalization
 from firewater.generalized_planner import plan_level
 from firewater.procedural_levels import held_out_seeds, training_seeds
 from firewater.train_ppo import RolloutLogger, behavior_clone
-
 
 INFO_KEYWORDS = ("success", "dead", "timeout", "reason", "layout_seed")
 
@@ -216,9 +214,7 @@ def main():
                 learning_rate=args.learning_rate,
                 clip_range=0.1,
                 ent_coef=args.ent_coef,
-                policy_kwargs={
-                    "net_arch": [args.hidden_size, args.hidden_size]
-                },
+                policy_kwargs={"net_arch": [args.hidden_size, args.hidden_size]},
                 seed=args.seed,
                 device=args.device,
             )

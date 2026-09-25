@@ -23,7 +23,6 @@ from firewater.evaluation import evaluate_model, format_evaluation
 from firewater.firewater_env import FireWaterEnv
 from firewater.scripted_demos import generate_scripted_demo
 
-
 INFO_KEYWORDS = ("success", "dead", "timeout", "reason")
 
 
@@ -189,7 +188,7 @@ def assign_levels(level_mix: tuple[int, ...], n_envs: int) -> list[int]:
 
         return [
             level_id
-            for level_id, count in zip(unique_levels, assigned_counts)
+            for level_id, count in zip(unique_levels, assigned_counts, strict=True)
             for _ in range(int(count))
         ]
 
@@ -336,8 +335,8 @@ def load_demos(
                 try:
                     for action_index, action in enumerate(acts):
                         replayed_obs.append(replay_observation)
-                        replay_observation, _, terminated, truncated, _ = (
-                            replay_env.step(action)
+                        replay_observation, _, terminated, truncated, _ = replay_env.step(
+                            action
                         )
                         if (terminated or truncated) and action_index + 1 < len(acts):
                             raise ValueError(
@@ -346,9 +345,7 @@ def load_demos(
                 finally:
                     replay_env.close()
                 obs = np.asarray(replayed_obs, dtype=np.float32)
-                print(
-                    f"[BC] Replayed legacy observations for level {level_id}: {path}"
-                )
+                print(f"[BC] Replayed legacy observations for level {level_id}: {path}")
 
             # Keyboard recordings often spend many frames idle before the
             # player begins. Those duplicate spawn states teach a cloned
@@ -531,20 +528,31 @@ def parse_args():
 
 def resolve_settings(args):
     settings = {
-        "run_name": args.run_name or ("firewater_quick" if args.quick else "firewater_ppo"),
+        "run_name": args.run_name
+        or ("firewater_quick" if args.quick else "firewater_ppo"),
         "n_envs": args.n_envs if args.n_envs is not None else (5 if args.quick else 8),
-        "n_steps": args.n_steps if args.n_steps is not None else (16 if args.quick else 1024),
-        "batch_size": args.batch_size if args.batch_size is not None else (40 if args.quick else 256),
-        "bc_epochs": args.bc_epochs if args.bc_epochs is not None else (1 if args.quick else 50),
+        "n_steps": args.n_steps
+        if args.n_steps is not None
+        else (16 if args.quick else 1024),
+        "batch_size": args.batch_size
+        if args.batch_size is not None
+        else (40 if args.quick else 256),
+        "bc_epochs": args.bc_epochs
+        if args.bc_epochs is not None
+        else (1 if args.quick else 50),
         "eval_episodes": (
-            args.eval_episodes if args.eval_episodes is not None else (1 if args.quick else 5)
+            args.eval_episodes
+            if args.eval_episodes is not None
+            else (1 if args.quick else 5)
         ),
         "timesteps_scale": (
             args.timesteps_scale
             if args.timesteps_scale is not None
             else (0.0001 if args.quick else 1.0)
         ),
-        "save_every": args.save_every if args.save_every is not None else (0 if args.quick else 100_000),
+        "save_every": args.save_every
+        if args.save_every is not None
+        else (0 if args.quick else 100_000),
     }
 
     if settings["n_envs"] < 1 or settings["n_steps"] < 2:
@@ -576,8 +584,7 @@ def resolve_settings(args):
 def save_evaluation_report(path: Path, results) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     serializable = {
-        str(level_id): result.to_dict()
-        for level_id, result in results.items()
+        str(level_id): result.to_dict() for level_id, result in results.items()
     }
     path.write_text(json.dumps(serializable, indent=2) + "\n", encoding="utf-8")
 
@@ -666,9 +673,7 @@ def main():
         for relative_index, phase in enumerate(selected_phases):
             phase_number = args.start_phase + relative_index
             phase_entropy_coef = (
-                args.ent_coef
-                if args.ent_coef is not None
-                else phase.entropy_coef
+                args.ent_coef if args.ent_coef is not None else phase.entropy_coef
             )
             model.ent_coef = phase_entropy_coef
 

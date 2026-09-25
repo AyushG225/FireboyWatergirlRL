@@ -21,9 +21,7 @@ class TempleRun:
 class TempleExpert:
     """Closed-loop geometry controller for the alternating-lift topology."""
 
-    stages: dict[str, int] = field(
-        default_factory=lambda: {"fire": 0, "water": 0}
-    )
+    stages: dict[str, int] = field(default_factory=lambda: {"fire": 0, "water": 0})
 
     def reset(self) -> None:
         self.stages = {"fire": 0, "water": 0}
@@ -40,22 +38,16 @@ class TempleExpert:
         stage = self.stages[who]
         x = getattr(env, f"{who}_x")
         y = getattr(env, f"{who}_y")
-        on_ground = getattr(env, f"{who}_on_ground")
 
         if stage >= len(env.level.moving_platforms):
-            goal_x = (
-                env.level.fire_goal[0]
-                if who == "fire"
-                else env.level.water_goal[0]
-            )
+            goal_x = env.level.fire_goal[0] if who == "fire" else env.level.water_goal[0]
             return self._move_toward(env, who, goal_x)
 
         lift = env.level.moving_platforms[stage]
         lift_rect = env.moving_rects[stage]
         lift_center = 0.5 * (lift.x1 + lift.x2)
         at_upper_landing = (
-            abs(y - lift.upper_y) <= 5.0
-            and lift.x1 - 5.0 <= x <= lift.x2 + 5.0
+            abs(y - lift.upper_y) <= 5.0 and lift.x1 - 5.0 <= x <= lift.x2 + 5.0
         )
         if at_upper_landing:
             self.stages[who] += 1
@@ -91,10 +83,7 @@ class TempleExpert:
             return 1 if direction < 0 else 2
 
         # Once centered on a lift, wait for it to carry the character up.
-        on_lift = (
-            lift.x1 - 3.0 <= x <= lift.x2 + 3.0
-            and abs(y - lift_rect[1]) <= 5.0
-        )
+        on_lift = lift.x1 - 3.0 <= x <= lift.x2 + 3.0 and abs(y - lift_rect[1]) <= 5.0
         if on_lift and lift_rect[1] > lift.upper_y + 4.0:
             return 0
 

@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 import numpy as np
 
-
 Rect = tuple[float, float, float, float]
 Point = tuple[float, float]
 

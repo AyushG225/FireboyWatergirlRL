@@ -5,10 +5,8 @@ import secrets
 from pathlib import Path
 
 import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
-
 from firewater.temple_env import TempleEnv, encode_joint_action
 from firewater.temple_expert import TempleExpert
-
 
 UNSEEN_SEED_START = 100_000
 
@@ -33,7 +31,13 @@ def parse_args():
 
 
 def _keyboard_local(keys, *, left, right, jump) -> int:
-    direction = -1 if keys[left] and not keys[right] else 1 if keys[right] and not keys[left] else 0
+    direction = (
+        -1
+        if keys[left] and not keys[right]
+        else 1
+        if keys[right] and not keys[left]
+        else 0
+    )
     wants_jump = bool(keys[jump])
     if direction < 0:
         return 4 if wants_jump else 1
@@ -50,8 +54,7 @@ def main():
     layout_seed = (
         args.seed
         if args.seed is not None
-        else UNSEEN_SEED_START
-        + secrets.randbelow(2**31 - UNSEEN_SEED_START)
+        else UNSEEN_SEED_START + secrets.randbelow(2**31 - UNSEEN_SEED_START)
     )
     model = None
     if args.model is not None:

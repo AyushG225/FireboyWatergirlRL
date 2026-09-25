@@ -1,0 +1,10 @@
+target-version = "py310"
+line-length = 90
+
+[lint]
+# pycodestyle, pyflakes, import order, bugbear, pyupgrade
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[lint.isort]
+# scripts/_bootstrap must import before the package it makes importable
+known-first-party = ["firewater", "_bootstrap"]

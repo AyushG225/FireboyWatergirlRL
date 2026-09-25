@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import asdict, dataclass
-from typing import Iterable
 
 import numpy as np
 from stable_baselines3.common.utils import set_random_seed
@@ -61,7 +61,7 @@ def evaluate_generalist(
         episode_return = 0.0
         info = {"reason": None}
         try:
-            for step_index in range(env.max_steps):
+            for _ in range(env.max_steps):
                 action, _ = model.predict(
                     observation,
                     deterministic=deterministic,
@@ -72,6 +72,7 @@ def evaluate_generalist(
                 episode_return += reward
                 if terminated or truncated:
                     break
+            episode_length = env.steps
         finally:
             env.close()
 
@@ -79,7 +80,7 @@ def evaluate_generalist(
         if reason in terminal_counts:
             terminal_counts[reason] += 1
         returns.append(episode_return)
-        lengths.append(step_index + 1)
+        lengths.append(episode_length)
         difficulty = generate_level(layout_seed).difficulty
         difficulty_outcomes[difficulty].append(reason == "success")
 
@@ -127,9 +128,7 @@ def evaluate_planner(seeds: Iterable[int]) -> GeneralizationEvaluation:
     return GeneralizationEvaluation(
         layouts=len(seeds),
         successes=sum(
-            int(value)
-            for outcomes in difficulty_outcomes.values()
-            for value in outcomes
+            int(value) for outcomes in difficulty_outcomes.values() for value in outcomes
         ),
         hazards=0,
         timeouts=0,

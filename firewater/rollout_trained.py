@@ -2,9 +2,9 @@ import argparse
 from pathlib import Path
 
 from stable_baselines3 import PPO
+
 from firewater.evaluation import observation_mode_for_model
 from firewater.firewater_env import FireWaterEnv
-
 
 PREFERRED_MODELS = (
     Path("checkpoints/firewater_refined_final"),

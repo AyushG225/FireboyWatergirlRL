@@ -45,14 +45,10 @@ def _directional_action(env, who: str, jump_margin: float) -> int:
     direction = 1 if goal_x > x else -1
     move_action = right_action if direction > 0 else left_action
     pool_x1, _, pool_x2, _ = deadly_pool
-    approaching_pool = (
-        direction > 0 and x < pool_x1 and pool_x1 - x < jump_margin
-    ) or (
+    approaching_pool = (direction > 0 and x < pool_x1 and pool_x1 - x < jump_margin) or (
         direction < 0 and x > pool_x2 and x - pool_x2 < jump_margin
     )
-    approaching_raised_door = (
-        goal_y < env.ground_y and abs(goal_x - x) < 150.0
-    )
+    approaching_raised_door = goal_y < env.ground_y and abs(goal_x - x) < 150.0
 
     if on_ground and (approaching_pool or approaching_raised_door):
         return jump_action

@@ -1,10 +1,10 @@
 # play_human.py
-import sys
 import argparse
+import sys
+
 import pygame
 
 import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
-
 from firewater.firewater_env import FireWaterEnv
 
 
@@ -18,6 +18,11 @@ def parse_args():
         help="Starting level id (0–4)",
     )
     return parser.parse_args()
+
+
+def just_pressed(keys, prev_keys, key) -> bool:
+    """Edge-detect a key so R / N / P trigger once per press."""
+    return bool(keys[key] and not prev_keys[key])
 
 
 def main():
@@ -56,20 +61,16 @@ def main():
         if keys[pygame.K_ESCAPE] or keys[pygame.K_q]:
             running = False
 
-        # Edge detection for R / N / P (only trigger on key-down)
-        def just_pressed(k):
-            return keys[k] and not prev_keys[k]
-
-        if just_pressed(pygame.K_r):
+        if just_pressed(keys, prev_keys, pygame.K_r):
             print("Resetting level...")
             obs, info = env.reset()
 
-        if just_pressed(pygame.K_n):
+        if just_pressed(keys, prev_keys, pygame.K_n):
             env.level_id = (env.level_id + 1) % len(env.levels)
             print(f"Switching to level {env.level_id}")
             obs, info = env.reset()
 
-        if just_pressed(pygame.K_p):
+        if just_pressed(keys, prev_keys, pygame.K_p):
             env.level_id = (env.level_id - 1) % len(env.levels)
             print(f"Switching to level {env.level_id}")
             obs, info = env.reset()

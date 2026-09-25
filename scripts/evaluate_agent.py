@@ -8,7 +8,6 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.utils import set_random_seed
 
 import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
-
 from firewater.evaluation import evaluate_model, format_evaluation
 
 
@@ -71,8 +70,7 @@ def main():
         print(f"\n{checkpoint}")
         print(format_evaluation(results))
         report[str(checkpoint)] = {
-            str(level_id): result.to_dict()
-            for level_id, result in results.items()
+            str(level_id): result.to_dict() for level_id, result in results.items()
         }
 
     if args.output is not None:

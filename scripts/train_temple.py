@@ -10,11 +10,9 @@ from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv
 
 import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
-
 from firewater.temple_env import TempleEnv
 from firewater.temple_expert import TempleExpert
 from firewater.train_ppo import RolloutLogger, behavior_clone
-
 
 INFO_KEYWORDS = (
     "success",
@@ -61,9 +59,7 @@ def generate_demonstrations(
                 if terminated or truncated:
                     break
             if info.get("reason") != "success":
-                raise RuntimeError(
-                    f"temple expert failed on seed {layout_seed}: {info}"
-                )
+                raise RuntimeError(f"temple expert failed on seed {layout_seed}: {info}")
         finally:
             env.close()
         print(

@@ -17,9 +17,12 @@ class RolloutTests(unittest.TestCase):
     def test_preferred_model_uses_first_existing_checkpoint(self):
         candidates = (Path("first"), Path("second"))
 
-        with patch("firewater.rollout_trained.PREFERRED_MODELS", candidates), patch(
-            "firewater.rollout_trained.checkpoint_exists",
-            side_effect=lambda path: path == candidates[1],
+        with (
+            patch("firewater.rollout_trained.PREFERRED_MODELS", candidates),
+            patch(
+                "firewater.rollout_trained.checkpoint_exists",
+                side_effect=lambda path: path == candidates[1],
+            ),
         ):
             self.assertEqual(preferred_model(), candidates[1])
 

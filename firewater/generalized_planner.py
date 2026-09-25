@@ -47,9 +47,7 @@ def _circle_in_rect(
     radius: float,
 ) -> bool:
     x1, y1, x2, y2 = rect
-    return (x1 - radius <= x <= x2 + radius) and (
-        y1 - radius <= y <= y2
-    )
+    return (x1 - radius <= x <= x2 + radius) and (y1 - radius <= y <= y2)
 
 
 def _advance(
@@ -233,9 +231,7 @@ def plan_level(env: FireWaterEnv) -> PlanResult:
         if terminated or truncated:
             break
     if info.get("reason") != "success":
-        raise RuntimeError(
-            f"planner verification failed on layout {layout_seed}: {info}"
-        )
+        raise RuntimeError(f"planner verification failed on layout {layout_seed}: {info}")
     return PlanResult(
         layout_seed=layout_seed,
         actions=actions,

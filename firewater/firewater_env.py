@@ -2,8 +2,8 @@
 import math
 from pathlib import Path
 
-import numpy as np
 import gymnasium as gym
+import numpy as np
 from gymnasium import spaces
 
 from firewater.procedural_levels import generate_level
@@ -103,10 +103,10 @@ class FireWaterEnv(gym.Env):
         self.W = 800
         self.H = 400
         self.ground_y = 320
-        self.gravity = 1000.0          # px / s^2
-        self.move_speed = 200.0        # px / s
-        self.jump_speed = -500.0       # px / s
-        self.dt = 1.0 / 30.0           # 30 FPS
+        self.gravity = 1000.0  # px / s^2
+        self.move_speed = 200.0  # px / s
+        self.jump_speed = -500.0  # px / s
+        self.dt = 1.0 / 30.0  # 30 FPS
 
         # Which level layout to use
         self.level_id = level_id
@@ -156,7 +156,6 @@ class FireWaterEnv(gym.Env):
 
         # render / collision radius for characters
         self.char_radius = 12
-
 
         # goal flags (latched when a character reaches its door)
         self.fire_at_goal = False
@@ -324,9 +323,7 @@ class FireWaterEnv(gym.Env):
             )
             if requested_seed is None:
                 seed_low, seed_high = self.procedural_seed_range
-                requested_seed = int(
-                    self.np_random.integers(seed_low, seed_high)
-                )
+                requested_seed = int(self.np_random.integers(seed_low, seed_high))
             self.layout_seed = int(requested_seed)
             cfg = generate_level(
                 self.layout_seed,
@@ -549,7 +546,7 @@ class FireWaterEnv(gym.Env):
         # ---------------- Fire controls ----------------
         if not self.fire_at_goal:
             # Decode combined commands
-            fire_move = 0   # -1 = left, +1 = right, 0 = none
+            fire_move = 0  # -1 = left, +1 = right, 0 = none
             fire_wants_jump = False
 
             if fire_cmd in ("left", "left_jump"):
@@ -692,7 +689,6 @@ class FireWaterEnv(gym.Env):
         )
         return float(fire_dist + water_dist)
 
-
     def _both_at_goals(self, tol=35.0):
         _ = tol  # unused, kept for compatibility
         return self.fire_at_goal and self.water_at_goal
@@ -750,9 +746,9 @@ class FireWaterEnv(gym.Env):
         # ---------------- Fire controls ----------------
         if not self.fire_at_goal:
             # Only change fire_vx if we actually press a horizontal button.
-            if action == 1:          # fire left
+            if action == 1:  # fire left
                 self.fire_vx = -self.move_speed
-            elif action == 2:        # fire right
+            elif action == 2:  # fire right
                 self.fire_vx = self.move_speed
             # Jump whenever on ground (needed for platforming and doors).
             if action == 3 and self.fire_on_ground:
@@ -764,9 +760,9 @@ class FireWaterEnv(gym.Env):
         # ---------------- Water controls ----------------
         if not self.water_at_goal:
             # Only change water_vx if we actually press a horizontal button.
-            if action == 4:          # water left
+            if action == 4:  # water left
                 self.water_vx = -self.move_speed
-            elif action == 5:        # water right
+            elif action == 5:  # water right
                 self.water_vx = self.move_speed
             # Jump whenever on ground (needed for platforming and doors).
             if action == 6 and self.water_on_ground:
@@ -804,7 +800,7 @@ class FireWaterEnv(gym.Env):
 
             # platform collisions
             # Treat platforms as solid rectangles: you can't jump up through them.
-            for (px1, py1, px2, py2) in getattr(self, "platforms", []):
+            for px1, py1, px2, py2 in getattr(self, "platforms", []):
                 top = py1
                 bottom = py2
 
@@ -837,11 +833,31 @@ class FireWaterEnv(gym.Env):
 
             return x, y, vx, vy, on_ground
 
-        (self.fire_x, self.fire_y, self.fire_vx, self.fire_vy, self.fire_on_ground) = \
-            clamp_char(self.fire_x, self.fire_y, self.fire_vx, self.fire_vy, old_fire_x, old_fire_y)
+        (self.fire_x, self.fire_y, self.fire_vx, self.fire_vy, self.fire_on_ground) = (
+            clamp_char(
+                self.fire_x,
+                self.fire_y,
+                self.fire_vx,
+                self.fire_vy,
+                old_fire_x,
+                old_fire_y,
+            )
+        )
 
-        (self.water_x, self.water_y, self.water_vx, self.water_vy, self.water_on_ground) = \
-            clamp_char(self.water_x, self.water_y, self.water_vx, self.water_vy, old_water_x, old_water_y)
+        (
+            self.water_x,
+            self.water_y,
+            self.water_vx,
+            self.water_vy,
+            self.water_on_ground,
+        ) = clamp_char(
+            self.water_x,
+            self.water_y,
+            self.water_vx,
+            self.water_vy,
+            old_water_x,
+            old_water_y,
+        )
 
         # After applying physics and ground/platform collisions, latch at goals if reached
         self._update_goal_states()
@@ -876,32 +892,34 @@ class FireWaterEnv(gym.Env):
         lava_center_x_norm = (lava_center_x / self.W) * 2.0 - 1.0
         water_center_x_norm = (water_center_x / self.W) * 2.0 - 1.0
 
-        same_side = 1.0 if (self.fire_x < self.W / 2) == (self.water_x < self.W / 2) else 0.0
+        same_side = (
+            1.0 if (self.fire_x < self.W / 2) == (self.water_x < self.W / 2) else 0.0
+        )
 
         time_remaining = 1.0 - (self.steps / self.max_steps)
         time_remaining = float(np.clip(time_remaining, 0.0, 1.0))
 
         values = [
-                fire_x_norm,                 # 0
-                fire_y_norm,                 # 1
-                fire_vx_norm,                # 2
-                fire_vy_norm,                # 3
-                water_x_norm,                # 4
-                water_y_norm,                # 5
-                water_vx_norm,               # 6
-                water_vy_norm,               # 7
-                float(self.fire_on_ground),  # 8
-                float(self.water_on_ground), # 9
-                fire_goal_x_norm,            # 10
-                water_goal_x_norm,           # 11
-                float(np.clip(fire_to_goal, 0.0, 1.0)),   # 12
-                float(np.clip(water_to_goal, 0.0, 1.0)),  # 13
-                float(np.clip(min_goal_dist, 0.0, 1.0)),  # 14
-                same_side,                   # 15
-                time_remaining,              # 16
-                lava_center_x_norm,          # 17
-                water_center_x_norm,         # 18
-            ]
+            fire_x_norm,  # 0
+            fire_y_norm,  # 1
+            fire_vx_norm,  # 2
+            fire_vy_norm,  # 3
+            water_x_norm,  # 4
+            water_y_norm,  # 5
+            water_vx_norm,  # 6
+            water_vy_norm,  # 7
+            float(self.fire_on_ground),  # 8
+            float(self.water_on_ground),  # 9
+            fire_goal_x_norm,  # 10
+            water_goal_x_norm,  # 11
+            float(np.clip(fire_to_goal, 0.0, 1.0)),  # 12
+            float(np.clip(water_to_goal, 0.0, 1.0)),  # 13
+            float(np.clip(min_goal_dist, 0.0, 1.0)),  # 14
+            same_side,  # 15
+            time_remaining,  # 16
+            lava_center_x_norm,  # 17
+            water_center_x_norm,  # 18
+        ]
 
         if self.observation_mode in ("enhanced_v1", "enhanced"):
             fire_goal_y_norm = (self.fire_goal_y / self.H) * 2.0 - 1.0
@@ -909,11 +927,11 @@ class FireWaterEnv(gym.Env):
             level_norm = (self.level_id / (len(self.levels) - 1)) * 2.0 - 1.0
             values.extend(
                 [
-                    fire_goal_y_norm,             # 19
-                    water_goal_y_norm,            # 20
-                    float(self.fire_at_goal),     # 21
-                    float(self.water_at_goal),    # 22
-                    level_norm,                   # 23
+                    fire_goal_y_norm,  # 19
+                    water_goal_y_norm,  # 20
+                    float(self.fire_at_goal),  # 21
+                    float(self.water_at_goal),  # 22
+                    level_norm,  # 23
                 ]
             )
 
@@ -1043,7 +1061,7 @@ class FireWaterEnv(gym.Env):
         )
 
         # platforms (raised ground)
-        for (px1, py1, px2, py2) in getattr(self, "platforms", []):
+        for px1, py1, px2, py2 in getattr(self, "platforms", []):
             pygame.draw.rect(
                 self.screen,
                 (120, 120, 120),
@@ -1069,10 +1087,16 @@ class FireWaterEnv(gym.Env):
         # characters
         radius = getattr(self, "char_radius", 12)
         pygame.draw.circle(
-            self.screen, (255, 50, 50), (int(self.fire_x), int(self.fire_y - radius)), radius
+            self.screen,
+            (255, 50, 50),
+            (int(self.fire_x), int(self.fire_y - radius)),
+            radius,
         )
         pygame.draw.circle(
-            self.screen, (50, 150, 255), (int(self.water_x), int(self.water_y - radius)), radius
+            self.screen,
+            (50, 150, 255),
+            (int(self.water_x), int(self.water_y - radius)),
+            radius,
         )
 
         if self.render_mode == "human":

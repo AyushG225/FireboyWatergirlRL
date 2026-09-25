@@ -7,11 +7,9 @@ from pathlib import Path
 from stable_baselines3 import PPO
 
 import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
-
 from firewater.firewater_env import FireWaterEnv
 from firewater.generalized_planner import plan_level
 from firewater.safety_shield import shield_action
-
 
 UNSEEN_SEED_START = 100_000
 
@@ -36,8 +34,7 @@ def main():
     layout_seed = (
         args.seed
         if args.seed is not None
-        else UNSEEN_SEED_START
-        + secrets.randbelow(2**31 - UNSEEN_SEED_START)
+        else UNSEEN_SEED_START + secrets.randbelow(2**31 - UNSEEN_SEED_START)
     )
     model = PPO.load(args.model) if args.model is not None else None
 
@@ -87,8 +84,7 @@ def main():
                 return
             if terminated or truncated:
                 print(
-                    f"seed={layout_seed} reason={info['reason']} "
-                    f"steps={step_index + 1}"
+                    f"seed={layout_seed} reason={info['reason']} steps={step_index + 1}"
                 )
                 break
     finally:

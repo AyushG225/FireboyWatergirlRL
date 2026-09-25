@@ -71,9 +71,7 @@ class TempleEnvTests(unittest.TestCase):
         env.fire_x = 0.5 * (x1 + x2)
         env.fire_y = y1
 
-        _, reward, terminated, truncated, info = env.step(
-            encode_joint_action(0, 0)
-        )
+        _, reward, terminated, truncated, info = env.step(encode_joint_action(0, 0))
 
         self.assertTrue(terminated)
         self.assertFalse(truncated)
@@ -95,9 +93,7 @@ class TempleEnvTests(unittest.TestCase):
         env.step(encode_joint_action(3, 0))
         minimum_head = env.fire_y - 2.0 * env.char_radius
         for _ in range(20):
-            _, _, terminated, truncated, _ = env.step(
-                encode_joint_action(0, 0)
-            )
+            _, _, terminated, truncated, _ = env.step(encode_joint_action(0, 0))
             minimum_head = min(
                 minimum_head,
                 env.fire_y - 2.0 * env.char_radius,

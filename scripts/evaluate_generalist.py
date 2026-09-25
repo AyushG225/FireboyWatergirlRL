@@ -7,7 +7,6 @@ from pathlib import Path
 from stable_baselines3 import PPO
 
 import _bootstrap  # noqa: F401  (adds the repository root to sys.path)
-
 from firewater.evaluation import observation_mode_for_model
 from firewater.generalization import (
     evaluate_generalist,

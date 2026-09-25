@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import math
-from typing import Iterable
+from collections.abc import Iterable
 
 import gymnasium as gym
 import numpy as np
@@ -161,9 +161,7 @@ class TempleEnv(gym.Env):
         self.fire_at_goal = self.water_at_goal = False
         self.steps = 0
         self._episode_done = False
-        self.button_active = {
-            button.button_id: False for button in self.level.buttons
-        }
+        self.button_active = {button.button_id: False for button in self.level.buttons}
         self.collected_gems = set()
         self.just_collected = []
         self.just_activated = []
@@ -257,21 +255,18 @@ class TempleEnv(gym.Env):
         travel_time = distance / spec.speed
         dwell_time = 0.8
         cycle_time = 2.0 * travel_time + 2.0 * dwell_time
-        cycle_position = (
-            time_seconds + spec.phase * cycle_time
-        ) % cycle_time
+        cycle_position = (time_seconds + spec.phase * cycle_time) % cycle_time
         if cycle_position < dwell_time:
             top = spec.lower_y
         elif cycle_position < dwell_time + travel_time:
-            top = spec.lower_y - (
-                cycle_position - dwell_time
-            ) * spec.speed
+            top = spec.lower_y - (cycle_position - dwell_time) * spec.speed
         elif cycle_position < 2.0 * dwell_time + travel_time:
             top = spec.upper_y
         else:
-            top = spec.upper_y + (
-                cycle_position - 2.0 * dwell_time - travel_time
-            ) * spec.speed
+            top = (
+                spec.upper_y
+                + (cycle_position - 2.0 * dwell_time - travel_time) * spec.speed
+            )
         return (spec.x1, top, spec.x2, top + 16.0)
 
     def _advance_moving_platforms(self) -> None:
@@ -287,7 +282,7 @@ class TempleEnv(gym.Env):
             vy = getattr(self, f"{who}_vy")
             if vy < -1.0:
                 continue
-            for old_rect, new_rect in zip(previous, updated):
+            for old_rect, new_rect in zip(previous, updated, strict=True):
                 x1, old_top, x2, _ = old_rect
                 if x1 - 2.0 <= x <= x2 + 2.0 and abs(y - old_top) <= 4.0:
                     setattr(self, f"{who}_y", y + new_rect[1] - old_top)
@@ -350,23 +345,14 @@ class TempleEnv(gym.Env):
             *self.moving_rects,
         )
         for px1, py1, px2, py2 in supports:
-            if (
-                vy >= 0.0
-                and old_y <= py1 + 4.0
-                and y >= py1
-                and px1 <= x <= px2
-            ):
+            if vy >= 0.0 and old_y <= py1 + 4.0 and y >= py1 and px1 <= x <= px2:
                 y = py1
                 vy = 0.0
                 on_ground = True
                 break
             old_head = old_y - 2.0 * radius
             new_head = y - 2.0 * radius
-            if (
-                vy < 0.0
-                and old_head >= py2 >= new_head
-                and px1 <= x <= px2
-            ):
+            if vy < 0.0 and old_head >= py2 >= new_head and px1 <= x <= px2:
                 # Character positions track their feet, so ceiling collision
                 # must use the top of the body rather than the feet. Snap the
                 # head below the obstacle instead of letting the sprite phase
@@ -464,9 +450,7 @@ class TempleEnv(gym.Env):
         return False
 
     def _progress_potential(self) -> float:
-        ascent = (
-            2.0 * self.ground_y - self.fire_y - self.water_y
-        ) / (2.0 * self.H)
+        ascent = (2.0 * self.ground_y - self.fire_y - self.water_y) / (2.0 * self.H)
         interaction = 0.04 * sum(self.button_active.values())
         interaction += 0.025 * len(self.collected_gems)
         return float(ascent + interaction)
@@ -485,9 +469,7 @@ class TempleEnv(gym.Env):
             "gems_total": len(self.level.gems),
             "buttons_active": sum(self.button_active.values()),
             "buttons_total": len(self.button_active),
-            "gates_open": sum(
-                self._gate_is_open(gate) for gate in self.level.gates
-            ),
+            "gates_open": sum(self._gate_is_open(gate) for gate in self.level.gates),
             "gates_total": len(self.level.gates),
         }
 
@@ -717,7 +699,9 @@ class TempleEnv(gym.Env):
     def _draw_stone_rect(self, rect, *, heavy=False) -> None:
         x1, y1, x2, y2 = map(int, rect)
         base = (77, 82, 53) if not heavy else (65, 69, 45)
-        pygame.draw.rect(self.screen, (26, 31, 21), (x1 - 3, y1 - 3, x2 - x1 + 6, y2 - y1 + 6))
+        pygame.draw.rect(
+            self.screen, (26, 31, 21), (x1 - 3, y1 - 3, x2 - x1 + 6, y2 - y1 + 6)
+        )
         pygame.draw.rect(self.screen, base, (x1, y1, x2 - x1, y2 - y1))
         brick_h = 14
         for row, y in enumerate(range(y1, y2, brick_h)):
@@ -751,9 +735,21 @@ class TempleEnv(gym.Env):
             ((x1 + x2) // 2, y1),
             2,
         )
-        pygame.draw.rect(self.screen, (42, 28, 18), (x1 - 3, y1 - 2, x2 - x1 + 6, y2 - y1 + 4), border_radius=5)
-        pygame.draw.rect(self.screen, (194, 139, 32), (x1, y1, x2 - x1, y2 - y1), border_radius=5)
-        pygame.draw.rect(self.screen, (108, 40, 137), (x1 + 8, y1 + 4, x2 - x1 - 16, max(4, y2 - y1 - 8)), border_radius=3)
+        pygame.draw.rect(
+            self.screen,
+            (42, 28, 18),
+            (x1 - 3, y1 - 2, x2 - x1 + 6, y2 - y1 + 4),
+            border_radius=5,
+        )
+        pygame.draw.rect(
+            self.screen, (194, 139, 32), (x1, y1, x2 - x1, y2 - y1), border_radius=5
+        )
+        pygame.draw.rect(
+            self.screen,
+            (108, 40, 137),
+            (x1 + 8, y1 + 4, x2 - x1 - 16, max(4, y2 - y1 - 8)),
+            border_radius=3,
+        )
 
     def _draw_hazard(self, hazard: HazardSpec) -> None:
         colors = {
@@ -763,10 +759,17 @@ class TempleEnv(gym.Env):
         }
         body, highlight = colors[hazard.kind]
         x1, y1, x2, y2 = map(int, hazard.rect)
-        pygame.draw.rect(self.screen, (14, 18, 16), (x1 - 3, y1 - 1, x2 - x1 + 6, y2 - y1 + 4), border_radius=7)
+        pygame.draw.rect(
+            self.screen,
+            (14, 18, 16),
+            (x1 - 3, y1 - 1, x2 - x1 + 6, y2 - y1 + 4),
+            border_radius=7,
+        )
         pygame.draw.rect(self.screen, body, (x1, y1, x2 - x1, y2 - y1), border_radius=6)
         wave = int(3 * math.sin(self.steps * 0.22 + x1 * 0.03))
-        pygame.draw.line(self.screen, highlight, (x1 + 5, y1 + 3 + wave), (x2 - 5, y1 + 3 - wave), 3)
+        pygame.draw.line(
+            self.screen, highlight, (x1 + 5, y1 + 3 + wave), (x2 - 5, y1 + 3 - wave), 3
+        )
 
     def _draw_gate(self, gate: GateSpec) -> None:
         if self._gate_is_open(gate):
@@ -799,9 +802,23 @@ class TempleEnv(gym.Env):
         halo = pygame.Surface((52, 52), pygame.SRCALPHA)
         pygame.draw.circle(halo, (*color, 38), (26, 26), 23)
         self.screen.blit(halo, (x - 26, y - 26))
-        points = [(x, y - 14), (x + 12, y - 5), (x + 7, y + 12), (x, y + 19), (x - 7, y + 12), (x - 12, y - 5)]
+        points = [
+            (x, y - 14),
+            (x + 12, y - 5),
+            (x + 7, y + 12),
+            (x, y + 19),
+            (x - 7, y + 12),
+            (x - 12, y - 5),
+        ]
         pygame.draw.polygon(self.screen, (18, 22, 20), points)
-        inner = [(x, y - 11), (x + 9, y - 4), (x + 5, y + 9), (x, y + 15), (x - 5, y + 9), (x - 9, y - 4)]
+        inner = [
+            (x, y - 11),
+            (x + 9, y - 4),
+            (x + 5, y + 9),
+            (x, y + 15),
+            (x - 5, y + 9),
+            (x - 9, y - 4),
+        ]
         pygame.draw.polygon(self.screen, color, inner)
         pygame.draw.line(self.screen, (255, 245, 220), (x - 4, y - 7), (x + 3, y - 5), 2)
 
@@ -809,8 +826,12 @@ class TempleEnv(gym.Env):
         x, y = map(int, goal)
         color = (255, 69, 37) if owner == "fire" else (54, 190, 255)
         unlocked = self._all_gates_open() and self._owner_gems_complete(owner)
-        pygame.draw.rect(self.screen, (28, 24, 18), (x - 25, y - 66, 50, 66), border_radius=8)
-        pygame.draw.rect(self.screen, (101, 88, 55), (x - 21, y - 62, 42, 62), border_radius=7)
+        pygame.draw.rect(
+            self.screen, (28, 24, 18), (x - 25, y - 66, 50, 66), border_radius=8
+        )
+        pygame.draw.rect(
+            self.screen, (101, 88, 55), (x - 21, y - 62, 42, 62), border_radius=7
+        )
         pygame.draw.rect(
             self.screen,
             color if unlocked else (72, 75, 68),
@@ -818,7 +839,9 @@ class TempleEnv(gym.Env):
             3,
             border_radius=10,
         )
-        pygame.draw.circle(self.screen, color if unlocked else (90, 90, 82), (x, y - 31), 8)
+        pygame.draw.circle(
+            self.screen, color if unlocked else (90, 90, 82), (x, y - 31), 8
+        )
         if reached:
             pygame.draw.circle(self.screen, (250, 237, 151), (x, y - 31), 14, 2)
 
@@ -846,7 +869,9 @@ class TempleEnv(gym.Env):
                 (x_i - 15, feet_y - 19),
             ]
         pygame.draw.polygon(self.screen, (16, 18, 16), points)
-        inner = [(px + (x_i - px) * 0.12, py + (feet_y - 16 - py) * 0.08) for px, py in points]
+        inner = [
+            (px + (x_i - px) * 0.12, py + (feet_y - 16 - py) * 0.08) for px, py in points
+        ]
         pygame.draw.polygon(self.screen, color, inner)
         pygame.draw.circle(self.screen, light, (x_i - 5, feet_y - 20), 3)
         pygame.draw.circle(self.screen, light, (x_i + 5, feet_y - 20), 3)
@@ -858,7 +883,9 @@ class TempleEnv(gym.Env):
             length = 12 + ((x + self.layout_seed) % 31)
             pygame.draw.line(self.screen, (17, 92, 35), (x, 0), (x + 5, length), 3)
             if x % 2:
-                pygame.draw.ellipse(self.screen, (25, 119, 43), (x + 1, length - 7, 12, 6))
+                pygame.draw.ellipse(
+                    self.screen, (25, 119, 43), (x + 1, length - 7, 12, 6)
+                )
 
     def _draw_hud(self) -> None:
         overlay = pygame.Surface((self.W, 54), pygame.SRCALPHA)
