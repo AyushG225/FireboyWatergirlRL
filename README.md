@@ -1,26 +1,103 @@
 # Fireboy & Watergirl RL
 
-A compact cooperative-control project built with Gymnasium and
-Stable-Baselines3. One policy controls Fire and Water across five levels with
-character-specific hazards, jumping, raised platforms, and two-door success.
+[![CI](https://github.com/AyushG225/FireboyWatergirlRL/actions/workflows/ci.yml/badge.svg)](https://github.com/AyushG225/FireboyWatergirlRL/actions/workflows/ci.yml)
 
-The repository includes keyboard play, headless rendering, human and scripted
-demonstrations, behavior cloning, a resumable PPO curriculum, detailed
-evaluation, and automated tests.
+Neural policies, a planner, and a scripted expert that control both characters
+of a Fireboy and Watergirl style cooperative platformer, measured on 1,000
+procedurally generated levels held out from training and checkpoint selection.
 
-## Complex temple mode
+<table>
+  <tr>
+    <td width="50%"><img src="docs/media/temple_policy.gif" alt="Trained temple policy solving held-out temple seed 100000"></td>
+    <td width="50%"><img src="docs/media/generalist_policy.gif" alt="Trained PPO policy solving held-out procedural layouts 100000 and 100001"></td>
+  </tr>
+  <tr>
+    <td>Temple: one <code>Discrete(36)</code> action moves both characters on every frame. Trained policy (cloning + DAgger) on held-out seed 100000, played at 3x speed.</td>
+    <td>Procedural levels: cloning + PPO policy (training seed 0) on held-out seeds 100000 and 100001, played in real time.</td>
+  </tr>
+</table>
 
-Launch a newly generated five-floor temple and watch both players solve it
-with simultaneous controls:
+## Results
 
-![Procedural five-floor temple preview](reports/temple_preview_100123.png)
+Every row is measured once on test layouts 100000 to 100999. Training used
+seeds below 90000, and each learned checkpoint was chosen on validation
+layouts from 90000 to 99999.
+
+| Environment | Controller | Type | Success | Source |
+| --- | --- | --- | ---: | --- |
+| Temple, `Discrete(36)` joint actions | Weighted cloning + DAgger | neural policy | **99.1%** | [temple_imitation_1000.json](reports/temple_imitation_1000.json) |
+| Temple | Closed-loop geometry expert | scripted expert | 100.0% | [temple_expert_1000.json](reports/temple_expert_1000.json) |
+| Procedural levels, `Discrete(7)` | Cloning + PPO, mean of 3 training seeds | neural policy | **97.3%** | [generalist_ablation_1000.json](reports/generalist_ablation_1000.json) |
+| Procedural levels | Cloning + PPO + safety shield | neural policy + shield | 95.3% | [generalist_ablation_1000.json](reports/generalist_ablation_1000.json) |
+| Procedural levels | Weighted A* planner | planner | 100.0% | [generalist_ablation_1000.json](reports/generalist_ablation_1000.json) |
+
+Ablations on the same test layouts: cloning alone solves 0.1% of procedural
+levels and 0.0% of temples, and PPO without cloning solves 0.0% of procedural
+levels. Per-difficulty tables, shield analysis, and protocol details are in the
+[generalization report](reports/GENERALIZATION.md) and the
+[temple report](reports/TEMPLE.md).
+
+**How it works.** A weighted A* planner (procedural levels) and a scripted
+expert (temple) produce demonstrations, and behavior cloning copies them into a
+neural policy. On procedural levels, PPO then fine-tunes that policy. In the
+temple, DAgger runs the learner, has the expert label the states it reaches,
+and retrains. A geometry safety shield can override a step toward a lethal
+pool. PPO fine-tuning of the temple policy dropped validation success to 0%,
+so the temple policy is trained by imitation alone.
+
+**Engineering.**
+
+- 56 unit tests. CI runs ruff lint and format checks, the tests, and
+  short end-to-end runs of all three trainers.
+- Throughput on an Apple M4 Pro, random actions: 4,525 steps/s for one
+  temple environment and 18,508 steps/s across 8 subprocess
+  environments; 55,009 steps/s for one procedural-level environment
+  ([throughput.json](reports/throughput.json)).
+- Checkpoints for every learned row are attached to the
+  [v1.0.0 release](https://github.com/AyushG225/FireboyWatergirlRL/releases/tag/v1.0.0).
+
+## Quick start
+
+Python 3.10 or newer.
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 python scripts/watch_temple.py
 ```
 
-The temple mode is a separate, backward-compatible environment inspired by
-the structure of a full Fireboy & Watergirl level. Each seed changes the
+That last command generates a new temple and lets the scripted expert solve it.
+Watch the trained policy instead after downloading the release checkpoints:
+
+```bash
+gh release download v1.0.0 --repo AyushG225/FireboyWatergirlRL --dir checkpoints/release
+python scripts/watch_temple.py --model checkpoints/release/temple_dagger_egocentric.zip
+```
+
+### Trained checkpoints
+
+Checkpoints are excluded from Git and published as release assets. Everything
+that needs no trained policy runs from a fresh clone: keyboard play, random
+and scripted rollouts, the planner, the temple expert, and the tests.
+
+| Release asset | Result it reproduces |
+| --- | --- |
+| `temple_dagger_egocentric.zip` | temple policy, 99.1% |
+| `temple_dagger_absolute.zip`, `temple_bc_only.zip`, `temple_dagger_ppo.zip` | temple ablation rows |
+| `generalist_bc_ppo_seed{0,1,2}.zip` | procedural policy, 97.3% mean |
+| `generalist_bc_only_seed{0,1,2}.zip`, `generalist_ppo_only_seed{0,1,2}.zip` | procedural ablation rows |
+
+`SHA256SUMS.txt` in the release lists a checksum for each file.
+
+## Temple mode
+
+```bash
+python scripts/watch_temple.py            # scripted expert on a fresh temple
+python scripts/watch_temple.py --manual   # play both characters yourself
+```
+
+Fire uses the arrow keys; Water uses `A`, `W`, and `D`. Each seed changes the
 hazards, gem and door positions, and lift timing while preserving a solvable
 alternating-floor topology. A level contains:
 
@@ -33,86 +110,48 @@ alternating-floor topology. A level contains:
 
 One `Discrete(36)` action encodes independent commands for both characters on
 the same frame: idle, left, right, jump, left+jump, or right+jump for Fire,
-crossed with the same six choices for Water. On the first 100 held-out temple
-seeds, the closed-loop expert solves 100/100 and actively moves both players
-at once for an average of 472 frames per level. Platforms and lifts are solid
-from both directions: characters land on top and bonk their heads underneath.
+crossed with the same six choices for Water. Platforms and lifts are solid from
+both directions: characters land on top and bonk their heads underneath.
 
-Play the temple yourself:
+Train the temple policy with cloning plus 16 DAgger rounds and no PPO:
 
 ```bash
-python scripts/watch_temple.py --manual
+python scripts/train_temple.py --timesteps 0 --dagger-iterations 16
 ```
 
-Fire uses the arrow keys; Water uses `A`, `W`, and `D`. Train a 250-input,
-36-action PPO policy from simultaneous expert demonstrations and randomized
-temple rollouts with:
+The trainer scores every stage on validation layouts and writes its choice to
+`selected_checkpoint` in `checkpoints/firewater_temple_validation.json`. Score
+that checkpoint on the test layouts with
+`python scripts/evaluate_temple.py checkpoints/<selected_checkpoint>.zip`, or
+pass it to `--init-model` to fine-tune it with PPO. Run `python scripts/train_temple.py --quick` to check the
+whole pipeline in a few seconds. The [temple report](reports/TEMPLE.md) covers
+the mechanics, the training pipeline, and the ablations.
 
-```bash
-python scripts/train_temple.py
-```
-
-Run `python scripts/train_temple.py --quick` first to smoke-test the full
-pipeline. See the [temple report](reports/TEMPLE.md) and
-[`temple_expert_100.json`](reports/archive/temple/temple_expert_100.json) for the exact
-mechanics and benchmark.
-
-## Solve a brand-new level
+## Procedural levels
 
 Generate a level from a fresh random seed, plan from its geometry, and watch
 both players beat it:
 
 ```bash
 python scripts/watch_unseen.py
-```
-
-Replay a particular unseen layout:
-
-```bash
 python scripts/watch_unseen.py --seed 100123
 ```
 
-Both commands above work on a fresh clone, because the planner solves the
-layout without a trained model. Once you have trained a generalist checkpoint,
-you can watch the geometry-only policy with its wrong-pool safety shield
-instead:
+Both commands work on a fresh clone because the planner needs no trained model.
+With the release checkpoints you can watch the learned policy, optionally with
+the safety shield:
 
 ```bash
-python scripts/watch_unseen.py \
-  --seed 100123 \
-  --model checkpoints/firewater_generalist_best
+python scripts/watch_unseen.py --seed 100123 \
+  --model checkpoints/release/generalist_bc_ppo_seed0.zip
+python scripts/watch_unseen.py --seed 100123 --safety-shield \
+  --model checkpoints/release/generalist_bc_ppo_seed0.zip
 ```
 
-The generalized controller receives player state and visible geometry but no
-level ID. The trainer restricts new runs to seeds below `100000`; evaluation
-uses held-out seeds beginning at `100000`. On 1,000 held-out layouts, the pure
-neural policy solves 96.1%, while the policy plus its geometry safety shield
-and the independent planner each solve 100%.
-
-See the [generalization report](reports/GENERALIZATION.md) and raw evaluation
-files for the exact protocol and an important scope boundary: this currently
-generalizes across newly generated layouts within this simulator's mechanics,
-not arbitrary screenshots from the commercial Fireboy & Watergirl game.
-
-## Setup
-
-Python 3.10 or newer is recommended.
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-```
-
-### Trained checkpoints are not included
-
-Stable-Baselines3 checkpoints are deliberately excluded from Git, so a fresh
-clone contains no `.zip` models. Everything that does not need a trained
-policy runs immediately: keyboard play, random and scripted rollouts, the
-planner, the temple expert, and the full test suite. Commands below that name
-a path under `checkpoints/` expect a model you trained yourself with one of
-the three trainers in `scripts/`. The JSON files in [`reports/`](reports)
-record the results those checkpoints produced.
+The procedural controller receives player state and visible geometry, with no
+level ID. The results cover newly generated layouts within this simulator's
+mechanics. Levels from the commercial Fireboy and Watergirl game use sprites,
+switches, and physics that the simulator does not model.
 
 ## Play and inspect the environment
 
@@ -158,7 +197,7 @@ python scripts/evaluate_agent.py \
 
 The checked-in [baseline report](reports/baseline.json) captures the models
 that were present when the training overhaul began. It shows that the old
-`ppo_firewater_multi` checkpoint succeeds on level 0 but not levels 1–4.
+`ppo_firewater_multi` checkpoint succeeds on level 0 and fails levels 1 to 4.
 The [overnight benchmark](reports/OVERNIGHT.md) records the complete progression
 and links the raw deterministic and stochastic evaluation reports.
 
@@ -212,9 +251,9 @@ The full preset trains these phases:
 1. Level 0 fundamentals
 2. Level 1 adaptation
 3. Level 2 raised doors
-4. Levels 0–2 consolidation
-5. Levels 0–4 exploration, including the harder platform levels
-6. Extra level 3–4 refinement while replaying levels 0–2
+4. Levels 0 to 2 consolidation
+5. Levels 0 to 4 exploration, including the harder platform levels
+6. Extra refinement on levels 3 and 4 while replaying levels 0 to 2
 7. Final all-level consolidation
 
 Checkpoints and per-phase JSON evaluations are written under `checkpoints/`.
@@ -241,34 +280,57 @@ To inspect training:
 tensorboard --logdir tb_firewater
 ```
 
-Train the geometry-only policy on a fresh randomized layout after every reset:
+Train the geometry-only policy with a fresh randomized layout after every
+reset. Checkpoints are scored on validation layouts every 250,000 steps and the
+choice is written to `checkpoints/<run-name>_validation.json`:
 
 ```bash
-python scripts/train_generalist.py
+python scripts/train_generalist.py --seed 0 --run-name gen_bc_s0
+python scripts/train_generalist.py --seed 0 --no-bc --run-name gen_nobc_s0
 ```
 
-Evaluate the planner, raw policy, and safety-shielded policy on disjoint
-levels. The first command needs no checkpoint; the other two evaluate a
-generalist model you trained:
+Score a checkpoint on the 1,000 test layouts, with and without the shield, and
+the planner:
 
 ```bash
-python scripts/evaluate_generalist.py --planner --count 1000
-python scripts/evaluate_generalist.py checkpoints/firewater_generalist_best --count 1000
-python scripts/evaluate_generalist.py checkpoints/firewater_generalist_best \
+python scripts/evaluate_generalist.py checkpoints/release/generalist_bc_ppo_seed0.zip --count 1000
+python scripts/evaluate_generalist.py checkpoints/release/generalist_bc_ppo_seed0.zip \
   --count 1000 --safety-shield
+python scripts/evaluate_generalist.py --planner --count 1000
 ```
+
+`scripts/generalist_ablation.py` scores every run in a directory at once and
+writes the ablation table.
 
 ## Test
 
 ```bash
+python -m pip install -r requirements-dev.txt
+ruff check firewater scripts tests
+ruff format --check firewater scripts tests
 python -m unittest discover -s tests -v
 ```
 
-The suite covers Gymnasium compliance, all five level solutions, terminal
-conditions, cooperative reward shaping, headless RGB rendering, demonstration
+The suite covers Gymnasium compliance, all five fixed-level solutions,
+terminal conditions, reward shaping, headless rendering, demonstration
 validation, curriculum scaling, procedural determinism, disjoint seed splits,
-unseen-level planning, the safety shield, and evaluation metrics. CI also
-performs small end-to-end fixed and procedural training runs.
+unseen-level planning, the safety shield, both temple observation modes, the
+stateless expert, weighted cloning, and a regression test for subprocess
+environments. A docs test checks README and report prose and links.
+
+Measure environment throughput:
+
+```bash
+python scripts/benchmark_throughput.py --n-envs 4 8 12 --output reports/throughput.json
+```
+
+Render the README animations headless:
+
+```bash
+python scripts/render_gif.py temple-policy --label "DAgger policy" --every 3 \
+  --model checkpoints/release/temple_dagger_egocentric.zip --seeds 100000 \
+  --width 640 --output docs/media/temple_policy.gif
+```
 
 ## Project layout
 
@@ -278,21 +340,22 @@ clone runs without an install step.
 
 ```
 firewater/          library
-├── firewater_env.py        environment, physics, rewards, rendering, recorder
+├── firewater_env.py        fixed and procedural levels: physics, rewards, rendering
 ├── procedural_levels.py    deterministic level generation and seed splits
-├── temple_env.py           joint actions, lifts, gems, switches, gates
+├── temple_env.py           joint actions, lifts, gems, switches, gates, observations
 ├── temple_levels.py        seeded multi-floor temple topology
+├── temple_evaluation.py    batched temple rollouts and metrics
 ├── scripted_demos.py       successful source-controlled expert trajectories
-├── generalized_planner.py  geometry-driven weighted-A* expert
-├── temple_expert.py        closed-loop simultaneous temple controller
-├── safety_shield.py        level-agnostic wrong-pool prevention
-├── evaluation.py           reusable per-level evaluation metrics
-├── generalization.py       held-out procedural layout metrics
-├── train_ppo.py            validated BC plus resumable PPO curriculum
+├── generalized_planner.py  geometry-driven weighted A* expert
+├── temple_expert.py        closed-loop temple controller, stateful or stateless
+├── safety_shield.py        level-agnostic wrong-pool override
+├── evaluation.py           per-level evaluation metrics
+├── generalization.py       held-out procedural metrics with per-difficulty counts
+├── train_ppo.py            weighted cloning plus resumable PPO curriculum
 └── rollout_trained.py      trained PPO playback
 
 scripts/            commands
-├── watch_temple.py         automatic or keyboard temple playback
+├── watch_temple.py         expert, policy, or keyboard temple playback
 ├── watch_unseen.py         generate and visibly solve a brand-new level
 ├── play_human.py           simultaneous keyboard controls
 ├── visual_rollout.py       random-policy visual smoke test
@@ -300,15 +363,22 @@ scripts/            commands
 ├── record_demo.py          record a keyboard trajectory
 ├── scripted_demos.py       write deterministic demonstrations to disk
 ├── generalized_planner.py  plan and verify a route through one layout
-├── temple_expert.py        benchmark the temple expert on held-out seeds
+├── temple_expert.py        benchmark the temple expert
+├── temple_expert_stats.py  stateless expert check and demonstration statistics
 ├── train_ppo.py            five-level curriculum
 ├── train_generalist.py     planner cloning plus procedural PPO
-├── train_temple.py         temple expert cloning plus randomized PPO
+├── train_temple.py         weighted cloning, DAgger, and PPO for the temple
 ├── evaluate_agent.py       checkpoint comparison and JSON reporting
-└── evaluate_generalist.py  held-out layout benchmarking
+├── evaluate_generalist.py  procedural test-layout benchmarking
+├── evaluate_temple.py      temple test-layout benchmarking
+├── generalist_ablation.py  score every generalist run on the test layouts
+├── shield_diagnosis.py     paired shield comparison on validation layouts
+├── benchmark_throughput.py environment steps per second
+└── render_gif.py           headless captioned GIFs
 
-tests/              environment, demonstration, training, evaluation regressions
-reports/            benchmark results and the raw evaluation JSON
+tests/              unit, regression, and docs tests
+reports/            reports and raw evaluation JSON; superseded files in archive/
+docs/media/         README animations
 ```
 
 ## License and attribution
@@ -316,7 +386,7 @@ reports/            benchmark results and the raw evaluation JSON
 Released under the [MIT License](LICENSE).
 
 This is an independent, from-scratch project written for research and
-education. It is inspired by the structure of the Fireboy & Watergirl games
-but is not affiliated with, endorsed by, or derived from them, and contains no
+education and is inspired by the structure of the Fireboy & Watergirl games.
+It is not affiliated with, endorsed by, or derived from them, and contains no
 code or assets from the originals. "Fireboy & Watergirl" belongs to its
 respective rights holders.
