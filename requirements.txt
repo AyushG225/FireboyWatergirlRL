@@ -3,4 +3,4 @@ numpy>=1.26,<3
 pygame>=2.5,<3
 stable-baselines3>=2.4,<2.8
 tensorboard>=2.14,<3
-
+pillow>=10.1,<13

@@ -49,6 +49,9 @@ replay_buffer/
 videos/
 *.mp4
 *.gif
+# README demo media is committed on purpose
+!docs/media/
+!docs/media/*.gif
 
 # -------------------------
 # Gymnasium Render Artifacts
